@@ -25,6 +25,31 @@ const server = http.createServer(async (req, res) => {
       return;
     }
 
+    // POST /api/clubs to add a new club
+    if (req.url === '/api/clubs' && req.method === 'POST') {
+      let body = '';
+      
+      req.on('data', chunk => {
+        body += chunk.toString();
+      });
+      
+      req.on('end', async () => {
+        try {
+          const clubData = JSON.parse(body);
+          const query = 'INSERT INTO clubs (club_name, description) VALUES (?, ?)';
+          const [result] = await db.query(query, [clubData.club_name, clubData.description]);
+
+          res.writeHead(201, { 'Content-Type': 'application/json' });
+          res.end(JSON.stringify({ id: result.insertId, message: 'Club created' }));
+        } catch (error) {
+          res.writeHead(500, { 'Content-Type': 'application/json' });
+          res.end(JSON.stringify({ error: error.message }));
+        }
+      });
+      return;
+    }
+
+    // If no matching API route found
     res.writeHead(404, { 'Content-Type': 'application/json' });
     res.end(JSON.stringify({ error: 'API endpoint not found' }));
     return;
