@@ -8,6 +8,12 @@ const PORT = 3000;
 const server = http.createServer((req, res) => {
   console.log('Request URL:', req.url);
 
+  if (req.url.startsWith('/api/')) {
+    res.writeHead(200, {'Content-Type': 'application/json'});
+    res.end(JSON.stringify({message: 'API endpoint'}));
+    return;
+  }
+
   // Default to index.html
   let filePath = req.url === '/' ? 'index.html' : req.url.substring(1);
 
