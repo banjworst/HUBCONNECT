@@ -2,7 +2,7 @@
 const http = require('http');
 const fs = require('fs');
 const path = require('path');
-const db = require('./Hub Connect/config/db');
+const db = require('./config/db');
 
 const PORT = 3000;
 
