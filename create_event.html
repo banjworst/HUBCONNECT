@@ -72,10 +72,17 @@
                 description: document.getElementById("eventDescription").value
             };
 
-            const res = await fetch("/events", {
+            const res = await fetch("/api/events", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(data)
+                body: JSON.stringify({
+                    club_id: 1,               // replace with the actual club ID or dropdown later
+                    event_title: document.getElementById("eventName").value,
+                    description: document.getElementById("eventDescription").value,
+                    event_date: document.getElementById("eventDate").value,
+                    location: document.getElementById("eventLocation").value,
+                    created_by: 1             // replace with logged-in user ID later
+                })
             });
 
             if (res.ok) {
@@ -88,3 +95,4 @@
     </script>
 </body>
 </html>
+
