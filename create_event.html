@@ -61,38 +61,42 @@
     </main>
 
     <script>
-        document.getElementById("event-form").addEventListener("submit", async (e) => {
-            e.preventDefault();
+    document.getElementById("event-form").addEventListener("submit", async (e) => {
+        e.preventDefault();
 
-            const data = {
-                name: document.getElementById("eventName").value,
-                club: document.getElementById("eventClub").value,
-                date: document.getElementById("eventDate").value,
-                location: document.getElementById("eventLocation").value,
-                description: document.getElementById("eventDescription").value
-            };
+        // Replace with actual IDs if you have multiple clubs or logged-in users
+        const data = {
+            club_id: 1, // temporary placeholder
+            event_title: document.getElementById("eventName").value,
+            description: document.getElementById("eventDescription").value,
+            event_date: document.getElementById("eventDate").value,
+            location: document.getElementById("eventLocation").value,
+            created_by: 1 // temporary placeholder
+        };
 
+        try {
             const res = await fetch("/api/events", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    club_id: 1,               // replace with the actual club ID or dropdown later
-                    event_title: document.getElementById("eventName").value,
-                    description: document.getElementById("eventDescription").value,
-                    event_date: document.getElementById("eventDate").value,
-                    location: document.getElementById("eventLocation").value,
-                    created_by: 1             // replace with logged-in user ID later
-                })
+                body: JSON.stringify(data)
             });
-
+    
             if (res.ok) {
                 alert("Event created!");
                 window.location.href = "events.html";
             } else {
-                alert("Failed to create event.");
+                const errorData = await res.json();
+                alert("Failed to create event: " + (errorData.error || res.status));
+                console.error(errorData);
             }
-        });
+        } catch (err) {
+            console.error("Fetch error:", err);
+            alert("Failed to create event: " + err.message);
+        }
+    });
     </script>
+
 </body>
 </html>
+
 
