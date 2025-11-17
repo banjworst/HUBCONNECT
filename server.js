@@ -3,8 +3,7 @@ const http = require('http');
 const fs = require('fs');
 const path = require('path');
 const db = require('./config/db');
-
-const PORT = 3000;
+const PORT = 80;
 
 const server = http.createServer(async (req, res) => {
   console.log('Request URL:', req.url);
@@ -368,6 +367,7 @@ const server = http.createServer(async (req, res) => {
   });
 });
 
-server.listen(PORT, () => {
-  console.log(`Server running at http://localhost:${PORT}`);
+server.listen(PORT, '0.0.0.0', () => {
+  console.log(`Server running at http://0.0.0.0:${PORT}`);
 });
+
