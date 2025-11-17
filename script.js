@@ -169,3 +169,38 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- RUN ON PAGE LOAD ---
     checkLoginStatus();
 });
+
+
+
+// --- Create EVENTS function ---
+async function loadEvents() {
+    // Only run if we are on the events.html page, it shouldnt run anywhere else.
+    if (!document.querySelector('.event-list')) return;
+
+    try {
+        const res = await fetch('/api/events'); 
+        if (!res.ok) throw new Error('Network response was not ok');
+
+        const events = await res.json();
+
+        const eventList = document.querySelector('.event-list');
+        eventList.innerHTML = ''; // Clear the existing static events
+
+        events.forEach(event => {
+            const card = document.createElement('div');
+            card.className = 'event-card';
+            card.innerHTML = `
+                <h2>${event.event_title}</h2>
+                <p class="event-date">${new Date(event.event_date).toLocaleDateString()}</p>
+                <p class="event-location">${event.location}</p>
+                <p class="event-description">${event.description}</p>
+            `;
+            eventList.appendChild(card);
+        });
+    } catch (err) {
+        console.error('Failed to load events:', err);
+    }
+}
+
+// Call it after DOM is ready
+document.addEventListener('DOMContentLoaded', loadEvents);
