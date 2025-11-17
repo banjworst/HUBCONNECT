@@ -4,13 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hub Connect - Club Manager</title>
-    <!-- Main style sheet -->
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
 
-    <!-- Header -->
     <header>
         <div class="header-container">
             <a href="/" class="logo">
@@ -18,7 +16,6 @@
             </a>
             
             <div class="header-right">
-                <!-- Navigation for logged-in user -->
                 <nav id="loggedInNav" class="header-nav hidden">
                     <a href="clubs.html">
                         <button class="view-clubs-btn">
@@ -29,7 +26,6 @@
                         <button class="view-events-btn">View All Events</button>
                     </a>
     
-                    <!-- *** FIXED LINK HERE *** -->
                     <a href="profile.html" class="user-profile">
                         <div class="user-info">
                             <p class="user-name" id="headerUserName">John Doe</p>
@@ -40,7 +36,6 @@
                     <button id="logoutButton" class="btn btn-secondary">Logout</button>
                 </nav>
 
-                <!-- Login button for logged-out user -->
                 <button id="loginButton" class="btn btn-primary">
                     Login
                 </button>
@@ -48,10 +43,8 @@
         </div>
     </header>
 
-    <!-- Main Content -->
     <main class="container">
         
-        <!-- Logged Out Message -->
         <section id="loggedOutMessage" class="message-box">
             <h1>Welcome to Hub Connect</h1>
             <p>Your central place for club management and campus events.</p>
@@ -60,13 +53,11 @@
             </button>
         </section>
 
-        <!-- Logged In Dashboard (Initially Hidden) -->
         <section id="dashboard" class="dashboard hidden">
             <h1 class="dashboard-title" id="dashboardTitle">Welcome back, John!</h1>
             
             <div class="dashboard-grid">
                 
-                <!-- My Clubs (Main Column) -->
                 <div class="card clubs-section">
                     <div class="card-header">
                         <h2>My Clubs</h2>
@@ -76,7 +67,6 @@
                     </div>
                     
                     <div class="club-list">
-                        <!-- Club Card 1 -->
                         <div class="club-card">
                             <div class="club-card-info">
                                 <div class="club-icon" style="background-color: #f0fdfa; color: #14b8a6;">C</div>
@@ -89,7 +79,6 @@
                             <button class="btn btn-secondary">Manage</button>
                         </div>
                         
-                        <!-- Club Card 2 -->
                         <div class="club-card">
                             <div class="club-card-info">
                                 <div class="club-icon" style="background-color: #fffbeb; color: #d97706;">D</div>
@@ -102,7 +91,6 @@
                             <button class="btn btn-secondary">View</button>
                         </div>
 
-                        <!-- Club Card 3 -->
                         <div class="club-card">
                             <div class="club-card-info">
                                 <div class="club-icon" style="background-color: #fff1f2; color: #e11d48;">A</div>
@@ -122,12 +110,10 @@
         
     </main>
 
-    <!-- Footer -->
     <footer class="footer">
         <p>&copy; 2025 Hub Connect. All rights reserved.</p>
     </footer>
 
-    <!-- Login Modal -->
     <div id="loginModal" class="modal-overlay hidden">
         <div id="loginModalContent" class="modal-content">
             <div class="modal-header">
@@ -136,7 +122,6 @@
             </div>
             
             <div class="modal-body">
-                <!-- Login Form -->
                 <form id="loginForm">
                     <div class="form-group">
                         <label for="login-email">Email Address</label>
@@ -157,7 +142,6 @@
                     </p>
                 </form>
 
-                <!-- Register Form (Hidden by default) -->
                 <form id="registerForm" class="hidden">
                     <div class="form-group">
                         <label for="register-name">Full Name</label>
@@ -189,7 +173,6 @@
         </div>
     </div>
 
-    <!-- Main script file -->
     <script src="script.js"></script>
 
 </body>

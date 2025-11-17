@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>View All Clubs - Hub Connect</title>
+    <title>Hub Connect - Club Manager</title>
     <!-- Main style sheet -->
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
 
-    <!-- This is the exact same header from index.html -->
+    <!-- Header -->
     <header>
         <div class="header-container">
             <a href="/" class="logo">
@@ -48,74 +48,78 @@
         </div>
     </header>
 
-    <!-- Main content -->
+    <!-- Main Content -->
     <main class="container">
-        <!-- This is your club content, styled by the main style.css -->
-        <section class="club-section-page">
-            <h1>Available Clubs & Organizations</h1>
-            <div class="club-list-page">
-                <div class="club-card-page">
-                    <h2>Chess Club</h2>
-                    <p class="club-description">Join us to play and learn chess strategies!</p>
-                    <p class="membership-count">Members: 45</p>
+        
+        <!-- Logged Out Message -->
+        <section id="loggedOutMessage" class="message-box">
+            <h1>Welcome to Hub Connect</h1>
+            <p>Your central place for club management and campus events.</p>
+            <button id="loginMessageButton" class="btn btn-primary btn-large">
+                Please Login to Continue
+            </button>
+        </section>
+
+        <!-- Logged In Dashboard (Initially Hidden) -->
+        <section id="dashboard" class="dashboard hidden">
+            <h1 class="dashboard-title" id="dashboardTitle">Welcome back, John!</h1>
+            
+            <div class="dashboard-grid">
+                
+                <!-- My Clubs (Main Column) -->
+                <div class="card clubs-section">
+                    <div class="card-header">
+                        <h2>My Clubs</h2>
+                        <button class="btn btn-primary">
+                            + Create New Club
+                        </button>
+                    </div>
+                    
+                    <div class="club-list">
+                        <!-- Club Card 1 -->
+                        <div class="club-card">
+                            <div class="club-card-info">
+                                <div class="club-icon" style="background-color: #f0fdfa; color: #14b8a6;">C</div>
+                                <div>
+                                    <h3 class="club-name">Coding Club</h3>
+                                    <span class="tag tag-admin">Admin</span>
+                                    <p class="club-meta">Next meeting: Weekly Hacknight - Fri 7:00 PM</p>
+                                </div>
+                            </div>
+                            <button class="btn btn-secondary">Manage</button>
+                        </div>
+                        
+                        <!-- Club Card 2 -->
+                        <div class="club-card">
+                            <div class="club-card-info">
+                                <div class="club-icon" style="background-color: #fffbeb; color: #d97706;">D</div>
+                                <div>
+                                    <h3 class="club-name">Debate Society</h3>
+                                    <span class="tag tag-member">Member</span>
+                                    <p class="club-meta">Topic poll for next debate is live!</p>
+                                </div>
+                            </div>
+                            <button class="btn btn-secondary">View</button>
+                        </div>
+
+                        <!-- Club Card 3 -->
+                        <div class="club-card">
+                            <div class="club-card-info">
+                                <div class="club-icon" style="background-color: #fff1f2; color: #e11d48;">A</div>
+                                <div>
+                                    <h3 class="club-name">Astronomy Club</h3>
+                                    <span class="tag tag-member">Member</span>
+                                    <p class="club-meta">Stargazing night this Saturday (weather permitting).</p>
+                                </div>
+                            </div>
+                            <button class="btn btn-secondary">View</button>
+                        </div>
+                    </div>
                 </div>
-                <div class="club-card-page">
-                    <h2>Debate Club</h2>
-                    <p class="club-description">Enhance your public speaking and argumentation skills.</p>
-                    <p class="membership-count">Members: 30</p>
-                </div>
-                <div class="club-card-page">
-                    <h2>Anime Club</h2>
-                    <p class="club-description">For fans of anime and manga to share and discuss.</p>
-                    <p class="membership-count">Members: 60</p>
-                </div>
-                <div class="club-card-page">
-                    <h2>Robotics Club</h2>
-                    <p class="club-description">Build and program robots for competitions and fun.</p>
-                    <p class="membership-count">Members: 25</p>
-                </div>
-                <div class="club-card-page">
-                    <h2>Photography Club</h2>
-                    <p class="club-description">Explore photography techniques and organize photo walks.</p>
-                    <p class="membership-count">Members: 40</p>
-                </div>
-                <div class="club-card-page">
-                    <h2>Environmental Club</h2>
-                    <p class="club-description">Promote sustainability and organize eco-friendly events.</p>
-                    <p class="membership-count">Members: 35</p>
-                </div>
-                <div class="club-card-page">
-                    <h2>Cooking Club</h2>
-                    <p class="club-description">Share recipes and cook together.</p>
-                    <p class="membership-count">Members: 50</p>
-                </div> 
-                <div class="club-card-page">
-                    <h2>Music Club</h2>
-                    <p class="club-description">For musicians to jam and collaborate.</p>
-                    <p class="membership-count">Members: 55</p>
-                </div>
-                <div class="club-card-page">
-                    <h2>Drama Club</h2>
-                    <p class="club-description">Acting, directing, and producing plays.</p>
-                    <p class="membership-count">Members: 28</p>
-                </div>
-                <div class="club-card-page">
-                    <h2>Science Club</h2>
-                    <p class="club-description">Explore scientific concepts and conduct experiments.</p>
-                    <p class="membership-count">Members: 38</p>
-                </div>
-                <div class="club-card-page">
-                    <h2>Literature Club</h2>
-                    <p class="club-description">Discuss books and share literary interests.</p>
-                    <p class="membership-count">Members: 42</p>
-                </div>
-                <div class="club-card-page">
-                    <h2>Fitness Club</h2>
-                    <p class="club-description">Group workouts and fitness challenges.</p>
-                    <p class="membership-count">Members: 48</p>
-                </div>
+                
             </div>
         </section>
+        
     </main>
 
     <!-- Footer -->
@@ -123,7 +127,7 @@
         <p>&copy; 2025 Hub Connect. All rights reserved.</p>
     </footer>
 
-    <!-- Login Modal (it's here, just hidden) -->
+    <!-- Login Modal -->
     <div id="loginModal" class="modal-overlay hidden">
         <div id="loginModalContent" class="modal-content">
             <div class="modal-header">

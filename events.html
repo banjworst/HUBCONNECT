@@ -4,13 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>All Events - Hub Connect</title>
-    <!-- Main style sheet -->
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
 
-    <!-- This is the exact same header from index.html -->
     <header>
         <div class="header-container">
             <a href="/" class="logo">
@@ -18,7 +16,6 @@
             </a>
             
             <div class="header-right">
-                <!-- Navigation for logged-in user -->
                 <nav id="loggedInNav" class="header-nav hidden">
                     <a href="clubs.html">
                         <button class="view-clubs-btn">
@@ -29,7 +26,6 @@
                         <button class="view-events-btn">View All Events</button>
                     </a>
     
-                    <!-- *** FIXED LINK HERE *** -->
                     <a href="profile.html" class="user-profile">
                         <div class="user-info">
                             <p class="user-name" id="headerUserName">John Doe</p>
@@ -40,7 +36,6 @@
                     <button id="logoutButton" class="btn btn-secondary">Logout</button>
                 </nav>
 
-                <!-- Login button for logged-out user -->
                 <button id="loginButton" class="btn btn-primary">
                     Login
                 </button>
@@ -48,9 +43,7 @@
         </div>
     </header>
 
-    <!-- Main content -->
     <main class="container">
-        <!-- This is your event content, styled by the main style.css -->
         <section class="events-section">
             <h1>Upcoming Events</h1>
             <div class="event-list">
@@ -76,12 +69,10 @@
         </section>
     </main>
 
-    <!-- Footer -->
     <footer class="footer">
         <p>&copy; 2025 Hub Connect. All rights reserved.</p>
     </footer>
 
-    <!-- Login Modal (it's here, just hidden, in case you want to log in from this page) -->
     <div id="loginModal" class="modal-overlay hidden">
         <div id="loginModalContent" class="modal-content">
             <div class="modal-header">
@@ -90,7 +81,6 @@
             </div>
             
             <div class="modal-body">
-                <!-- Login Form -->
                 <form id="loginForm">
                     <div class="form-group">
                         <label for="login-email">Email Address</label>
@@ -111,7 +101,6 @@
                     </p>
                 </form>
 
-                <!-- Register Form (Hidden by default) -->
                 <form id="registerForm" class="hidden">
                     <div class="form-group">
                         <label for="register-name">Full Name</label>
@@ -143,7 +132,6 @@
         </div>
     </div>
 
-    <!-- Main script file -->
     <script src="script.js"></script>
 
 </body>
