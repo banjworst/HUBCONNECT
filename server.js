@@ -81,7 +81,7 @@ const server = http.createServer(async (req, res) => {
             eventData.event_date,
             eventData.location,
             eventData.created_by
-T          ]);
+          ]);
 
           res.writeHead(201, { 'Content-Type': 'application/json' });
           res.end(JSON.stringify({ id: result.insertId, message: 'Event created' }));
