@@ -92,6 +92,23 @@ const server = http.createServer(async (req, res) => {
       return;
     }
 
+        // DELETE /api/events/:id
+    if (req.url.startsWith('/api/events/') && req.method === 'DELETE') {
+        const eventId = req.url.split('/')[3];
+    
+        try {
+            const query = 'DELETE FROM events WHERE event_id = ?';
+            await db.query(query, [eventId]);
+    
+            res.writeHead(200, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({ message: 'Event deleted' }));
+        } catch (error) {
+            res.writeHead(500, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({ error: error.message }));
+        }
+        return;
+    }
+
     if (req.url.startsWith('/api/clubs/') && req.method === 'PUT') {
       const clubId = req.url.split('/')[3];
       let body = '';
