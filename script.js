@@ -174,7 +174,7 @@ async function loadEvents() {
         events.forEach(event => {
             const card = document.createElement('div');
             card.className = 'event-card';
-            card.setAttribute('data-id', event.id);
+            card.setAttribute('data-id', event.event_id);
 
             card.innerHTML = `
                 <h2>${event.event_title}</h2>
