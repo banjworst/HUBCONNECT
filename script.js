@@ -616,3 +616,5 @@ async function loadEvents() {
         console.error('Failed to load events:', err);
     }
 }
+
+document.addEventListener('DOMContentLoaded', loadEvents);
