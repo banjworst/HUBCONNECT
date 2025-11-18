@@ -8,25 +8,25 @@ document.addEventListener('DOMContentLoaded', () => {
     const dashboard = document.getElementById('dashboard');
     const loggedOutMessage = document.getElementById('loggedOutMessage');
     const logoutButton = document.getElementById('logoutButton');
-    const profileLogoutButton = document.getElementById('profileLogoutButton'); // Logout button on profile page
+    const profileLogoutButton = document.getElementById('profileLogoutButton');
 
     // Header user info (on all pages)
     const headerUserName = document.getElementById('headerUserName');
     const headerUserEmail = document.getElementById('headerUserEmail');
     const headerUserAvatar = document.getElementById('headerUserAvatar');
-    
+
     // Page-specific elements
-    const dashboardTitle = document.getElementById('dashboardTitle'); // Only on index.html
-    const profileName = document.getElementById('profileName'); // Only on profile.html
-    const profileEmail = document.getElementById('profileEmail'); // Only on profile.html
-    const profileAvatar = document.getElementById('profileAvatar'); // Only on profile.html
-    
-    // Modal elements (on all pages)
+    const dashboardTitle = document.getElementById('dashboardTitle');
+    const profileName = document.getElementById('profileName');
+    const profileEmail = document.getElementById('profileEmail');
+    const profileAvatar = document.getElementById('profileAvatar');
+
+    // Modal elements
     const loginModal = document.getElementById('loginModal');
     const closeModalButton = document.getElementById('closeModalButton');
     const modalTitle = document.getElementById('modalTitle');
-    
-    // Form elements (on all pages)
+
+    // Form elements
     const loginForm = document.getElementById('loginForm');
     const registerForm = document.getElementById('registerForm');
     const toggleToRegister = document.getElementById('toggleToRegister');
@@ -43,46 +43,46 @@ document.addEventListener('DOMContentLoaded', () => {
     function hideModal() {
         if (loginModal) loginModal.classList.add('hidden');
     }
-    
+
     // --- UI Update Function ---
     function showLoggedInUI(name, email) {
         const avatarInitial = name.charAt(0).toUpperCase();
 
-        // Update header (globally)
+        // Header
         if (headerUserName) headerUserName.textContent = name;
         if (headerUserEmail) headerUserEmail.textContent = email;
         if (headerUserAvatar) headerUserAvatar.textContent = avatarInitial;
-        
-        // Show/hide nav buttons (globally)
+
+        // Nav buttons
         if (loggedInNav) loggedInNav.classList.remove('hidden');
         if (loginButton) loginButton.classList.add('hidden');
 
-        // Update index.html specific elements
+        // Index.html
         if (dashboardTitle) dashboardTitle.textContent = `Welcome back, ${name}!`;
         if (loggedOutMessage) loggedOutMessage.classList.add('hidden');
         if (dashboard) dashboard.classList.remove('hidden');
 
-        // UPDATED: Update profile.html specific elements
+        // Profile.html
         if (profileName) profileName.textContent = name;
         if (profileEmail) profileEmail.textContent = email;
         if (profileAvatar) profileAvatar.textContent = avatarInitial;
-        
+
         hideModal();
     }
 
     function showLoggedOutUI() {
-        // Update header (globally)
+        // Header
         if (loggedInNav) loggedInNav.classList.add('hidden');
         if (loginButton) loginButton.classList.remove('hidden');
 
-        // Update index.html specific elements
+        // Index.html
         if (loggedOutMessage) loggedOutMessage.classList.remove('hidden');
         if (dashboard) dashboard.classList.add('hidden');
 
-        // Clear user info from storage
+        // Clear storage
         localStorage.removeItem('hubUser');
 
-        // If on profile page, redirect to home
+        // Redirect if on profile page
         if (window.location.pathname.includes('profile.html')) {
             window.location.href = 'index.html';
         }
@@ -100,8 +100,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // --- Event Listeners ---
-    
-    // Modal Open/Close
     if (loginButton) loginButton.addEventListener('click', showModal);
     if (loginMessageButton) loginMessageButton.addEventListener('click', showModal);
     if (closeModalButton) closeModalButton.addEventListener('click', hideModal);
@@ -111,7 +109,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Form Toggling
     if (toggleToRegister) {
         toggleToRegister.addEventListener('click', (e) => {
             e.preventDefault();
@@ -130,77 +127,89 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Handle login simulation
     if (loginForm) {
         loginForm.addEventListener('submit', (e) => {
             e.preventDefault();
             const email = document.getElementById('login-email').value || 'john@email.com';
-            const name = "John Doe"; // Simulate getting name
-            
+            const name = "John Doe";
             localStorage.setItem('hubUser', JSON.stringify({ name, email }));
             showLoggedInUI(name, email);
         });
     }
 
-     // Handle registration simulation
-     if (registerForm) {
+    if (registerForm) {
         registerForm.addEventListener('submit', (e) => {
             e.preventDefault();
             const name = document.getElementById('register-name').value || "Jane Doe";
             const email = document.getElementById('register-email').value || 'jane@email.com';
-
             localStorage.setItem('hubUser', JSON.stringify({ name, email }));
             showLoggedInUI(name, email);
         });
     }
 
-    // Handle Logout
     if (logoutButton) {
-        logoutButton.addEventListener('click', () => {
-            showLoggedOutUI();
-        });
+        logoutButton.addEventListener('click', showLoggedOutUI);
     }
     if (profileLogoutButton) {
-        profileLogoutButton.addEventListener('click', () => {
-            showLoggedOutUI();
-        });
+        profileLogoutButton.addEventListener('click', showLoggedOutUI);
     }
 
-    // --- RUN ON PAGE LOAD ---
+    // Run on load
     checkLoginStatus();
+    loadEvents(); // call events loader here
 });
 
-
-
-// --- Create EVENTS function ---
+// --- Load Events Function ---
 async function loadEvents() {
-    // Only run if we are on the events.html page, it shouldnt run anywhere else.
     if (!document.querySelector('.event-list')) return;
 
     try {
-        const res = await fetch('/api/events'); 
+        const res = await fetch('/api/events');
         if (!res.ok) throw new Error('Network response was not ok');
 
         const events = await res.json();
-
         const eventList = document.querySelector('.event-list');
-        eventList.innerHTML = ''; // Clear the existing static events
+        eventList.innerHTML = '';
 
         events.forEach(event => {
             const card = document.createElement('div');
             card.className = 'event-card';
+            card.setAttribute('data-id', event.event_id);
+
             card.innerHTML = `
                 <h2>${event.event_title}</h2>
                 <p class="event-date">${new Date(event.event_date).toLocaleDateString()}</p>
                 <p class="event-location">${event.location}</p>
                 <p class="event-description">${event.description}</p>
+                <button class="delete-event-btn" style="
+                    margin-top:10px;
+                    background:#d9534f;
+                    color:white;
+                    border:none;
+                    padding:8px 12px;
+                    border-radius:6px;
+                    cursor:pointer;
+                ">Delete</button>
             `;
+
             eventList.appendChild(card);
+
+            const deleteBtn = card.querySelector('.delete-event-btn');
+            deleteBtn.addEventListener('click', async () => {
+                const id = card.getAttribute('data-id');
+                if (!confirm("Are you sure you want to delete this event?")) return;
+
+                try {
+                    const delRes = await fetch(`/api/events/${id}`, { method: 'DELETE' });
+                    if (!delRes.ok) throw new Error('Failed to delete');
+                    card.remove();
+                } catch (err) {
+                    alert("Failed to delete event.");
+                    console.error(err);
+                }
+            });
         });
     } catch (err) {
         console.error('Failed to load events:', err);
     }
 }
-
-// Call it after DOM is ready
-document.addEventListener('DOMContentLoaded', loadEvents);
