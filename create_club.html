@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Create Club</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <!-- HEADER (same on every page) -->
+    <header>
+        <div class="header-container">
+            <a href="index.html" class="logo">HubConnect</a>
+            <div class="header-right">
+                <a href="clubs.html" class="view-clubs-btn">Clubs</a>
+                <a href="events.html" class="view-events-btn">Events</a>
+
+                <a href="profile.html" class="user-profile">
+                    <div class="user-info">
+                        <p class="user-name">Student Guy</p>
+                        <p class="user-email">student@example.com</p>
+                    </div>
+                    <div class="user-avatar">J</div>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <h1 class="page-title">Create a New Club</h1>
+
+        <form id="club-form" class="club-form">
+            <div class="form-group">
+                <label>Club Name</label>
+                <input type="text" id="clubName" required>
+            </div>
+
+            <div class="form-group">
+                <label>Description</label>
+                <textarea id="clubDescription" required></textarea>
+            </div>
+
+            <button class="btn btn-primary btn-large" type="submit">Create Club</button>
+        </form>
+    </main>
+
+    <script>
+    document.getElementById("club-form").addEventListener("submit", async (e) => {
+        e.preventDefault();
+
+        const data = {
+            club_name: document.getElementById("clubName").value,
+            description: document.getElementById("clubDescription").value
+        };
+
+        try {
+            const res = await fetch("/api/clubs", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(data)
+            });
+    
+            if (res.ok) {
+                alert("Club created successfully!");
+                window.location.href = "view_clubs.html";
+            } else {
+                const errorData = await res.json();
+                alert("Failed to create club: " + (errorData.error || res.status));
+                console.error(errorData);
+            }
+        } catch (err) {
+            console.error("Fetch error:", err);
+            alert("Failed to create club: " + err.message);
+        }
+    });
+    </script>
+
+</body>
+</html>
+

@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Profile - Hub Connect</title>
+  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <header>
+    <div class="header-container">
+        <a href="/" class="logo">
+            HUB CONNECT
+        </a>
+        
+        <div class="header-right">
+            <nav id="loggedInNav" class="header-nav hidden">
+                <a href="clubs.html">
+                    <button class="view-clubs-btn">
+                        View Other Clubs
+                    </button>
+                </a>
+                <a href="events.html">
+                    <button class="view-events-btn">View All Events</button>
+                </a>
+
+                <a href="profile.html" class="user-profile">
+                    <div class="user-info">
+                        <p class="user-name" id="headerUserName">John Doe</p>
+                        <p class="user-email" id="headerUserEmail">john@email.com</p>
+                    </div>
+                    <div class="user-avatar" id="headerUserAvatar">JD</div>
+                </a>
+                <button id="logoutButton" class="btn btn-secondary">Logout</button>
+            </nav>
+
+            <button id="loginButton" class="btn btn-primary">
+                Login
+            </button>
+        </div>
+    </header>
+
+  <main class="container">
+    <h1 class="profile-page-title">My Profile</h1>
+
+    <div class="profile-grid">
+      <aside class="profile-details-card card">
+        <div class="profile-header">
+          <div class="profile-pic" id="profileAvatar">S</div>
+          <h2 id="profileName">Student</h2>
+          <p class="user-role" id="profileRole">Student</p>
+        </div>
+
+        <div class="profile-info">
+          <h3>Profile Information</h3>
+          <ul>
+            <li><strong>Email:</strong> <span id="profileEmail">student@example.com</span></li>
+            <li><strong>Major:</strong> <span id="profileMajor">Not Set</span></li>
+            <li><strong>Year:</strong> <span id="profileYear">Not Set</span></li>
+          </ul>
+        </div>
+
+        <div class="profile-actions">
+          <button class="btn btn-primary">Edit Profile</button>
+          <button class="btn btn-secondary" id="profileLogoutButton">Logout</button>
+        </div>
+      </aside>
+
+      <section class="profile-content">
+        <div class="card">
+          <div class="card-header">
+            <h2>My Clubs</h2>
+          </div>
+          <div class="club-list">
+            <div class="club-card">
+              <div class="club-card-info">
+                <div class="club-icon" style="background-color: #f0fdfa; color: #14b8a6;">C</div>
+                <div>
+                  <h3 class="club-name">Coding Club</h3>
+                  <span class="tag tag-admin">Admin</span>
+                </div>
+              </div>
+              <button class="btn btn-secondary">Manage</button>
+            </div>
+            <div class="club-card">
+              <div class="club-card-info">
+                <div class="club-icon" style="background-color: #fffbeb; color: #d97706;">D</div>
+                <div>
+                  <h3 class="club-name">Debate Society</h3>
+                  <span class="tag tag-member">Member</span>
+                </div>
+              </div>
+              <button class="btn btn-secondary">View</button>
+            </div>
+            <div class="club-card">
+              <div class="club-card-info">
+                <div class="club-icon" style="background-color: #fff1f2; color: #e11d48;">A</div>
+                <div>
+                  <h3 class="club-name">Astronomy Club</h3>
+                  <span class="tag tag-member">Member</span>
+                </div>
+              </div>
+              <button class="btn btn-secondary">View</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="card" style="margin-top: 24px;">
+          <div class="card-header">
+            <h2>My RSVP'd Events</h2>
+          </div>
+          <div class="event-list">
+            <div class="event-card">
+              <h2>Guest Speaker: AI in Tech</h2>
+              <p class="event-date">Nov 12, 2025 - 6:00 PM</p>
+              <p class="event-location">Hosted by Coding Club</p>
+            </div>
+            <div class="event-card">
+              <h2>Telescope Viewing Night</h2>
+              <p class="event-date">Nov 15, 2025 - 9:00 PM</p>
+              <p class="event-location">Hosted by Astronomy Club</p>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <footer class="footer">
+      <p>&copy; 2025 Hub Connect. All rights reserved.</p>
+  </footer>
+
+  <div id="loginModal" class="modal-overlay hidden">
+      <div id="loginModalContent" class="modal-content">
+          <div class="modal-header">
+              <h2 id="modalTitle">Login to Hub Connect</h2>
+              <button id="closeModalButton" class="modal-close-btn">&times;</button>
+          </div>
+          
+          <div class="modal-body">
+              <form id="loginForm">
+                  <div class="form-group">
+                      <label for="login-email">Email Address</label>
+                      <input type="email" id="login-email" value="john@email.com" required>
+                  </div>
+                  <div class="form-group">
+                      <label for="login-password">Password</label>
+                      <input type="password" id="login-password" value="password" required>
+                  </div>
+                  
+                  <button type="submit" class="btn btn-primary" style="width: 100%;">
+                      Sign In
+                  </button>
+                  
+                  <p class="form-toggle-text">
+                      Don't have an account? 
+                      <a href="#" id="toggleToRegister" class="form-toggle-link">Register</a>
+                  </p>
+              </form>
+
+              <form id="registerForm" class="hidden">
+                  <div class="form-group">
+                      <label for="register-name">Full Name</label>
+                      <input type="text" id="register-name" value="Jane Doe" required>
+                  </div>
+                  <div class="form-group">
+                      <label for="register-email">Email Address</label>
+                      <input type="email" id="register-email" required>
+                  </div>
+                  <div class="form-group">
+                      <label for="register-password">Password</label>
+                      <input type="password" id="register-password" required>
+                  </div>
+                   <div class="form-group">
+                      <label for="confirm-password">Confirm Password</label>
+                      <input type="password" id="confirm-password" required>
+                  </div>
+                  
+                  <button type="submit" class="btn btn-primary" style="width: 100%;">
+                      Create Account
+                  </button>
+
+                  <p class="form-toggle-text">
+                      Already have an account? 
+                      <a href="#" id="toggleToLogin" class="form-toggle-link">Login</a>
+                  </p>
+              </form>
+          </div>
+      </div>
+  </div>
+
+  <script src="script.js"></script>
+
+</body>
+</html>
