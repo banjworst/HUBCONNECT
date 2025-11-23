@@ -13,39 +13,42 @@ const connection = mysql.createConnection({
   port: 3306
 });
 
+// Connect to DB
 connection.connect((err) => {
   if (err) {
-    console.log('Connection error:', err);
+    console.error("Connection error:", err);
     return;
   }
+  console.log("Connected to MySQL: View Events");
+});
 
-  console.log('Connected to MySQL: View Events');
-
-  const query = `
+// Query: Fetch upcoming events
+const query = `
     SELECT event_id, title, date_time, description
     FROM Event
     ORDER BY date_time ASC;
-  `;
+`;
 
-  connection.query(query, (err, results) => {
-    if (err) {
-      console.log('Error pulling events:', err);
-      connection.end();
-      return;
-    }
+connection.query(query, (err, results) => {
+  if (err) {
+    console.error("Error pulling events:", err);
+    return;
+  }
 
-    console.log('\nUpcoming Events:\n');
+  if (results.length === 0) {
+    console.log("⚠️ No events found.");
+  } else {
+    console.log("\n📅 Upcoming Events:\n");
 
-    if (results.length === 0) {
-      console.log("No events found.");
-    } else {
-      results.forEach(ev => {
-        console.log(`${ev.event_id} | ${ev.title} | ${ev.date_time}`);
-        if (ev.description) console.log("  " + ev.description);
-        console.log("----------------------");
-      });
-    }
+    results.forEach(event => {
+      console.log(`------------------------`);
+      console.log(`Event:       ${event.title}`);
+      console.log(`Date & Time: ${event.date_time}`);
+      console.log(`Description: ${event.description}`);
+    });
 
-    connection.end();
-  });
+    console.log(`------------------------`);
+  }
+
+  connection.end();
 });
