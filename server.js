@@ -108,7 +108,7 @@ const server = http.createServer(async (req, res) => {
         }
         return;
     }
-
+        // PUT /api/clubs - to Update 
     if (req.url.startsWith('/api/clubs/') && req.method === 'PUT') {
       const clubId = req.url.split('/')[3];
       let body = '';
@@ -120,7 +120,7 @@ const server = http.createServer(async (req, res) => {
       req.on('end', async () => {
         try {
           const clubData = JSON.parse(body);
-          const query = 'UPDATE clubs SET club_name = ?, description = ? WHERE id = ?';
+          const query = 'UPDATE clubs SET club_name = ?, description = ? WHERE club_id = ?';
           await db.query(query, [clubData.club_name, clubData.description, clubId]);
 
           res.writeHead(200, { 'Content-Type': 'application/json' });
@@ -132,6 +132,36 @@ const server = http.createServer(async (req, res) => {
       });
       return;
     }
+          
+    // POST /api/clubs/verify-password - Verify club password
+    if (req.url === '/api/clubs/verify-password' && req.method === 'POST') {
+      let body = '';
+      
+      req.on('data', chunk => {
+        body += chunk.toString();
+      });
+      
+      req.on('end', async () => {
+        try {
+          const data = JSON.parse(body);
+          const query = 'SELECT club_id, club_name FROM clubs WHERE club_id = ? AND club_password = ?';
+          const [clubs] = await db.query(query, [data.club_id, data.club_password]);
+          
+          if (clubs.length === 0) {
+            res.writeHead(401, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({ error: 'Invalid password' }));
+          } else {
+            res.writeHead(200, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({ message: 'Password correct', club: clubs[0] }));
+          }
+        } catch (error) {
+          res.writeHead(500, { 'Content-Type': 'application/json' });
+          res.end(JSON.stringify({ error: error.message }));
+        }
+      });
+      return;
+    }
+             
 
     if (req.url.startsWith('/api/rosters/') && req.method === 'GET') {
       const clubId = req.url.split('/')[3];
