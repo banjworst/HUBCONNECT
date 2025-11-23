@@ -35,7 +35,7 @@ const server = http.createServer(async (req, res) => {
       req.on('end', async () => {
         try {
           const clubData = JSON.parse(body);
-          const query = 'INSERT INTO clubs (club_name, description, club_password) VALUES (?, ?)';
+          const query = 'INSERT INTO clubs (club_name, description, club_password) VALUES (?, ?, ?)';
           const [result] = await db.query(query, [clubData.club_name, clubData.description, clubData.club_password]);
 
           res.writeHead(201, { 'Content-Type': 'application/json' });
