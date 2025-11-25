@@ -1,5 +1,5 @@
 // addMember.js
-// Feature: Add Member for HubConnect
+// Feature: Add member to a club for HubConnect
 // Author: Jayden
 
 const mysql = require('mysql2');
@@ -12,44 +12,47 @@ const connection = mysql.createConnection({
   port: 3306
 });
 
-// CHANGE THESE TO TEST
-const NAME = "New Member";
-const EMAIL = "newmember@example.com";
+// Demo data – change these values when testing
+const MEMBER_NAME = 'New Member';
+const MEMBER_EMAIL = 'newmember@example.com';
 const CLUB_ID = 1;
 
 connection.connect((err) => {
   if (err) {
-    console.log("Connection error:", err);
+    console.error('Connection error:', err);
     return;
   }
 
-  console.log("Connected to MySQL: Add Member");
+  console.log('Connected to MySQL: Add Member');
 
-  const addUserSQL = `
+  // 1) Insert into User table
+  const insertUserSql = `
     INSERT INTO User (name, email)
-    VALUES (?, ?)
+    VALUES (?, ?);
   `;
 
-  connection.query(addUserSQL, [NAME, EMAIL], (err, result) => {
+  connection.query(insertUserSql, [MEMBER_NAME, MEMBER_EMAIL], (err, result) => {
     if (err) {
-      console.log("User insert error:", err);
+      console.error('Error inserting user:', err);
       connection.end();
       return;
     }
 
-    const newUserID = result.insertId;
-    console.log("New user created with ID:", newUserID);
+    const newUserId = result.insertId;
+    console.log('New user created with ID:', newUserId);
 
-    const addMembershipSQL = `
+    // 2) Insert into Membership table
+    // (includes status column = 'active')
+    const insertMembershipSql = `
       INSERT INTO Membership (user_id, club_id, join_date, status)
-      VALUES (?, ?, NOW(), 'active')
+      VALUES (?, ?, NOW(), 'active');
     `;
 
-    connection.query(addMembershipSQL, [newUserID, CLUB_ID], (err2) => {
+    connection.query(insertMembershipSql, [newUserId, CLUB_ID], (err2) => {
       if (err2) {
-        console.log("Membership insert error:", err2);
+        console.error('Error inserting membership:', err2);
       } else {
-        console.log("Member successfully added to the club!");
+        console.log(`Member successfully added to club ${CLUB_ID}!`);
       }
 
       connection.end();
