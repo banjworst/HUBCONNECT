@@ -3,100 +3,162 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Create Event</title>
+    <title>Create Event - Hub Connect</title>
     <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 </head>
-
 <body>
-    <!-- HEADER (same on every page) -->
+
     <header>
         <div class="header-container">
-            <a href="index.html" class="logo">HubConnect</a>
+            <a href="/" class="logo">
+                HUB CONNECT
+            </a>
+            
             <div class="header-right">
-                <a href="clubs.html" class="view-clubs-btn">Clubs</a>
-                <a href="events.html" class="view-events-btn">Events</a>
+                <nav id="loggedInNav" class="header-nav hidden">
+                    <a href="clubs.html">
+                        <button class="view-clubs-btn">View Other Clubs</button>
+                    </a>
+                    <a href="events.html">
+                        <button class="view-events-btn">View All Events</button>
+                    </a>
+    
+                    <a href="profile.html" class="user-profile">
+                        <div class="user-info">
+                            <p class="user-name" id="headerUserName">John Doe</p>
+                            <p class="user-email" id="headerUserEmail">john@email.com</p>
+                        </div>
+                        <div class="user-avatar" id="headerUserAvatar">JD</div>
+                    </a>
+                    <button id="logoutButton" class="btn btn-secondary">Logout</button>
+                </nav>
 
-                <a href="profile.html" class="user-profile">
-                    <div class="user-info">
-                        <p class="user-name">Student Guy</p>
-                        <p class="user-email">student@example.com</p>
-                    </div>
-                    <div class="user-avatar">J</div>
-                </a>
+                <button id="loginButton" class="btn btn-primary">Login</button>
             </div>
         </div>
     </header>
 
     <main class="container">
-        <h1 class="page-title">Create a New Event</h1>
+        <section class="form-section">
+            <h1 class="page-title">Create a New Event</h1>
 
-        <form id="event-form" class="event-form">
-            <div class="form-group">
-                <label>Event Name</label>
-                <input type="text" id="eventName" required>
-            </div>
+            <form id="event-form" class="event-form">
+                
+                <div class="form-group">
+                    <label for="eventName">Event Name</label>
+                    <input type="text" id="eventName" required placeholder="e.g. Annual Chess Tournament">
+                </div>
 
-            <div class="form-group">
-                <label>Club Name</label>
-                <input type="text" id="eventClub" required>
-            </div>
+                <div class="form-group">
+                    <label for="eventClub">Host Club</label>
+                    <select id="eventClub" required style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+                        <option value="" disabled selected>Select a club...</option>
+                        <option value="1">Chess Club</option>
+                        <option value="2">Robotics Team</option>
+                        <option value="3">Debate Society</option>
+                    </select>
+                </div>
 
-            <div class="form-group">
-                <label>Date</label>
-                <input type="date" id="eventDate" required>
-            </div>
+                <div style="display: flex; gap: 16px;">
+                    <div class="form-group" style="flex: 1;">
+                        <label for="eventDate">Date</label>
+                        <input type="date" id="eventDate" required>
+                    </div>
+                    <div class="form-group" style="flex: 1;">
+                        <label for="eventTime">Time</label>
+                        <input type="time" id="eventTime" required>
+                    </div>
+                </div>
 
-            <div class="form-group">
-                <label>Location</label>
-                <input type="text" id="eventLocation" required>
-            </div>
+                <div class="form-group">
+                    <label for="eventLocation">Location</label>
+                    <input type="text" id="eventLocation" required placeholder="e.g. Student Center Room 302">
+                </div>
 
-            <div class="form-group">
-                <label>Description</label>
-                <textarea id="eventDescription" required></textarea>
-            </div>
+                <div class="form-group">
+                    <label for="eventDescription">Description</label>
+                    <textarea id="eventDescription" rows="5" required placeholder="Describe the event..."></textarea>
+                </div>
 
-            <button class="btn btn-primary btn-large" type="submit">Create Event</button>
-        </form>
+                <button class="btn btn-primary btn-large" style="width: 100%; margin-top: 10px;" type="submit">
+                    Publish Event
+                </button>
+            </form>
+        </section>
     </main>
 
+    <footer class="footer">
+        <p>&copy; 2025 Hub Connect. All rights reserved.</p>
+    </footer>
+
+    <div id="loginModal" class="modal-overlay hidden">
+        <div id="loginModalContent" class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle">Login to Hub Connect</h2>
+                <button id="closeModalButton" class="modal-close-btn">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="loginForm">
+                    <div class="form-group">
+                        <label for="login-email">Email Address</label>
+                        <input type="email" id="login-email" value="john@email.com" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="login-password">Password</label>
+                        <input type="password" id="login-password" value="password" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="width: 100%;">Sign In</button>
+                    <p class="form-toggle-text">Don't have an account? <a href="#" id="toggleToRegister" class="form-toggle-link">Register</a></p>
+                </form>
+                <form id="registerForm" class="hidden">
+                    <div class="form-group">
+                        <label for="register-name">Full Name</label>
+                        <input type="text" id="register-name" value="Jane Doe" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="register-email">Email Address</label>
+                        <input type="email" id="register-email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="register-password">Password</label>
+                        <input type="password" id="register-password" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="confirm-password">Confirm Password</label>
+                        <input type="password" id="confirm-password" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="width: 100%;">Create Account</button>
+                    <p class="form-toggle-text">Already have an account? <a href="#" id="toggleToLogin" class="form-toggle-link">Login</a></p>
+                </form>
+            </div>
+        </div>
+    </div>
+
     <script>
-    document.getElementById("event-form").addEventListener("submit", async (e) => {
-        e.preventDefault();
+        document.getElementById("event-form").addEventListener("submit", (e) => {
+            e.preventDefault(); // Stop page reload
 
-        // Replace with actual IDs if you have multiple clubs or logged-in users
-        const data = {
-            club_id: 1, // temporary placeholder
-            event_title: document.getElementById("eventName").value,
-            description: document.getElementById("eventDescription").value,
-            event_date: document.getElementById("eventDate").value,
-            location: document.getElementById("eventLocation").value,
-            created_by: 1 // temporary placeholder
-        };
+            // 1. Gather data
+            const eventData = {
+                title: document.getElementById("eventName").value,
+                club_id: document.getElementById("eventClub").value,
+                date: document.getElementById("eventDate").value,
+                time: document.getElementById("eventTime").value,
+                location: document.getElementById("eventLocation").value,
+                description: document.getElementById("eventDescription").value
+            };
 
-        try {
-            const res = await fetch("/api/events", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(data)
-            });
-    
-            if (res.ok) {
-                alert("Event created!");
-                window.location.href = "events.html";
-            } else {
-                const errorData = await res.json();
-                alert("Failed to create event: " + (errorData.error || res.status));
-                console.error(errorData);
-            }
-        } catch (err) {
-            console.error("Fetch error:", err);
-            alert("Failed to create event: " + err.message);
-        }
-    });
+            console.log("Creating Event:", eventData);
+
+            // 2. Mock success (In Sprint 2, this will be a real fetch() call)
+            alert("Success! Event '" + eventData.title + "' created.");
+            
+            // 3. Redirect back to the events list
+            window.location.href = "events.html"; 
+        });
     </script>
-
+    
+    <script src="script.js"></script>
 </body>
 </html>
-
-

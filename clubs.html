@@ -3,33 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hub Connect - Club Manager</title>
-    <!-- Main style sheet -->
+    <title>All Clubs - Hub Connect</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
 
-    <!-- Header -->
     <header>
         <div class="header-container">
-            <a href="/" class="logo">
-                HUB CONNECT
-            </a>
-            
+            <a href="/" class="logo">HUB CONNECT</a>
             <div class="header-right">
-                <!-- Navigation for logged-in user -->
                 <nav id="loggedInNav" class="header-nav hidden">
                     <a href="clubs.html">
-                        <button class="view-clubs-btn">
-                            View Other Clubs
-                        </button>
+                        <button class="view-clubs-btn" style="background-color: #f5f5f5;">View Other Clubs</button>
                     </a>
                     <a href="events.html">
                         <button class="view-events-btn">View All Events</button>
                     </a>
-    
-                    <!-- *** FIXED LINK HERE *** -->
                     <a href="profile.html" class="user-profile">
                         <div class="user-info">
                             <p class="user-name" id="headerUserName">John Doe</p>
@@ -39,157 +29,47 @@
                     </a>
                     <button id="logoutButton" class="btn btn-secondary">Logout</button>
                 </nav>
-
-                <!-- Login button for logged-out user -->
-                <button id="loginButton" class="btn btn-primary">
-                    Login
-                </button>
+                <button id="loginButton" class="btn btn-primary">Login</button>
             </div>
         </div>
     </header>
 
-    <!-- Main Content -->
     <main class="container">
         
-        <!-- Logged Out Message -->
-        <section id="loggedOutMessage" class="message-box">
-            <h1>Welcome to Hub Connect</h1>
-            <p>Your central place for club management and campus events.</p>
-            <button id="loginMessageButton" class="btn btn-primary btn-large">
-                Please Login to Continue
-            </button>
-        </section>
-
-        <!-- Logged In Dashboard (Initially Hidden) -->
-        <section id="dashboard" class="dashboard hidden">
-            <h1 class="dashboard-title" id="dashboardTitle">Welcome back, John!</h1>
-            
-            <div class="dashboard-grid">
-                
-                <!-- My Clubs (Main Column) -->
-                <div class="card clubs-section">
-                    <div class="card-header">
-                        <h2>My Clubs</h2>
-                        <button class="btn btn-primary">
-                            + Create New Club
-                        </button>
-                    </div>
-                    
-                    <div class="club-list">
-                        <!-- Club Card 1 -->
-                        <div class="club-card">
-                            <div class="club-card-info">
-                                <div class="club-icon" style="background-color: #f0fdfa; color: #14b8a6;">C</div>
-                                <div>
-                                    <h3 class="club-name">Coding Club</h3>
-                                    <span class="tag tag-admin">Admin</span>
-                                    <p class="club-meta">Next meeting: Weekly Hacknight - Fri 7:00 PM</p>
-                                </div>
-                            </div>
-                            <button class="btn btn-secondary">Manage</button>
-                        </div>
-                        
-                        <!-- Club Card 2 -->
-                        <div class="club-card">
-                            <div class="club-card-info">
-                                <div class="club-icon" style="background-color: #fffbeb; color: #d97706;">D</div>
-                                <div>
-                                    <h3 class="club-name">Debate Society</h3>
-                                    <span class="tag tag-member">Member</span>
-                                    <p class="club-meta">Topic poll for next debate is live!</p>
-                                </div>
-                            </div>
-                            <button class="btn btn-secondary">View</button>
-                        </div>
-
-                        <!-- Club Card 3 -->
-                        <div class="club-card">
-                            <div class="club-card-info">
-                                <div class="club-icon" style="background-color: #fff1f2; color: #e11d48;">A</div>
-                                <div>
-                                    <h3 class="club-name">Astronomy Club</h3>
-                                    <span class="tag tag-member">Member</span>
-                                    <p class="club-meta">Stargazing night this Saturday (weather permitting).</p>
-                                </div>
-                            </div>
-                            <button class="btn btn-secondary">View</button>
-                        </div>
-                    </div>
-                </div>
-                
+        <section class="directory-header" style="margin-bottom: 32px; display: flex; justify-content: space-between; align-items: center;">
+            <div>
+                <h1 style="font-size: 24px; font-weight: 700; margin-bottom: 8px;">Explore Clubs</h1>
+                <p style="color: gray;">Find a community that matches your interests.</p>
             </div>
+            <input type="text" id="clubSearch" placeholder="Search clubs..." style="padding: 10px; border: 1px solid #ddd; border-radius: 6px; width: 250px;">
         </section>
-        
+
+        <section id="clubs-grid" class="club-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 24px;">
+            <p style="color: gray;">Loading clubs from database...</p>
+        </section>
+
     </main>
 
-    <!-- Footer -->
     <footer class="footer">
         <p>&copy; 2025 Hub Connect. All rights reserved.</p>
     </footer>
 
-    <!-- Login Modal -->
     <div id="loginModal" class="modal-overlay hidden">
         <div id="loginModalContent" class="modal-content">
             <div class="modal-header">
-                <h2 id="modalTitle">Login to Hub Connect</h2>
+                <h2 id="modalTitle">Login</h2>
                 <button id="closeModalButton" class="modal-close-btn">&times;</button>
             </div>
-            
             <div class="modal-body">
-                <!-- Login Form -->
                 <form id="loginForm">
-                    <div class="form-group">
-                        <label for="login-email">Email Address</label>
-                        <input type="email" id="login-email" value="john@email.com" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="login-password">Password</label>
-                        <input type="password" id="login-password" value="password" required>
-                    </div>
-                    
-                    <button type="submit" class="btn btn-primary" style="width: 100%;">
-                        Sign In
-                    </button>
-                    
-                    <p class="form-toggle-text">
-                        Don't have an account? 
-                        <a href="#" id="toggleToRegister" class="form-toggle-link">Register</a>
-                    </p>
-                </form>
-
-                <!-- Register Form (Hidden by default) -->
-                <form id="registerForm" class="hidden">
-                    <div class="form-group">
-                        <label for="register-name">Full Name</label>
-                        <input type="text" id="register-name" value="Jane Doe" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="register-email">Email Address</label>
-                        <input type="email" id="register-email" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="register-password">Password</label>
-                        <input type="password" id="register-password" required>
-                    </div>
-                     <div class="form-group">
-                        <label for="confirm-password">Confirm Password</label>
-                        <input type="password" id="confirm-password" required>
-                    </div>
-                    
-                    <button type="submit" class="btn btn-primary" style="width: 100%;">
-                        Create Account
-                    </button>
-
-                    <p class="form-toggle-text">
-                        Already have an account? 
-                        <a href="#" id="toggleToLogin" class="form-toggle-link">Login</a>
-                    </p>
+                    <div class="form-group"><label>Email</label><input type="email" id="login-email" required></div>
+                    <div class="form-group"><label>Password</label><input type="password" id="login-password" required></div>
+                    <button type="submit" class="btn btn-primary" style="width: 100%;">Sign In</button>
                 </form>
             </div>
         </div>
     </div>
 
-    <!-- Main script file -->
     <script src="script.js"></script>
 
 </body>
