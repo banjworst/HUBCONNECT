@@ -148,6 +148,22 @@ const server = http.createServer(async (req, res) => {
     if (pathname.startsWith('/api/events/') && req.method === 'DELETE') {
         const eventId = pathname.split('/')[3];
         try {
+            const data = JSON.parse(body);
+
+            // FETCH password for club associated with event
+            const [rows] = await db.query(
+                'SELECT club_password FROM clubs WHERE club_id = ?',
+                [data.club_id]
+            );
+
+            if (rows.length === 0 || rows[0].club_password !== data.password) {
+                res.writeHead(401, { 'Content-Type': 'application/json' });
+                res.end(JSON.stringify({ error: 'Invalid password' }));
+                return;
+            }
+
+            // DELETE event if password is correct
+
             await db.query('DELETE FROM events WHERE event_id = ?', [eventId]);
             res.writeHead(200, { 'Content-Type': 'application/json' });
             res.end(JSON.stringify({ message: 'Event deleted' }));
