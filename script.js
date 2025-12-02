@@ -1,38 +1,48 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // --- Get Elements ---
+    // ==========================================
+    // 1. GLOBAL VARIABLES & ELEMENTS
+    // ==========================================
+    
+    // Auth UI Elements
     const loginButton = document.getElementById('loginButton');
     const loggedInNav = document.getElementById('loggedInNav');
-    
-    // Auth-dependent elements (may not be on all pages)
-    const loginMessageButton = document.getElementById('loginMessageButton');
-    const dashboard = document.getElementById('dashboard');
-    const loggedOutMessage = document.getElementById('loggedOutMessage');
     const logoutButton = document.getElementById('logoutButton');
     const profileLogoutButton = document.getElementById('profileLogoutButton');
-
-    // Header user info (on all pages)
+    
+    // Header Info
     const headerUserName = document.getElementById('headerUserName');
     const headerUserEmail = document.getElementById('headerUserEmail');
     const headerUserAvatar = document.getElementById('headerUserAvatar');
 
-    // Page-specific elements
+    // Dashboard Elements (Index.html)
     const dashboardTitle = document.getElementById('dashboardTitle');
+    const loggedOutMessage = document.getElementById('loggedOutMessage');
+    const dashboard = document.getElementById('dashboard');
+    const loginMessageButton = document.getElementById('loginMessageButton');
+
+    // Profile Elements
     const profileName = document.getElementById('profileName');
     const profileEmail = document.getElementById('profileEmail');
     const profileAvatar = document.getElementById('profileAvatar');
 
-    // Modal elements
+    // Modals
     const loginModal = document.getElementById('loginModal');
     const closeModalButton = document.getElementById('closeModalButton');
     const modalTitle = document.getElementById('modalTitle');
-
-    // Form elements
     const loginForm = document.getElementById('loginForm');
     const registerForm = document.getElementById('registerForm');
     const toggleToRegister = document.getElementById('toggleToRegister');
     const toggleToLogin = document.getElementById('toggleToLogin');
 
-    // --- Modal Functions ---
+    // Page Specific Elements
+    const eventForm = document.getElementById('event-form'); // From create_event.html
+    const eventListContainer = document.querySelector('.event-list'); // From events.html
+    const clubsGrid = document.getElementById('clubs-grid'); // From clubs.html (NEW)
+
+    // ==========================================
+    // 2. AUTHENTICATION UI LOGIC (Client Side)
+    // ==========================================
+
     function showModal() {
         if (loginModal) loginModal.classList.remove('hidden');
         if (loginForm) loginForm.classList.remove('hidden');
@@ -44,25 +54,22 @@ document.addEventListener('DOMContentLoaded', () => {
         if (loginModal) loginModal.classList.add('hidden');
     }
 
-    // --- UI Update Function ---
     function showLoggedInUI(name, email) {
         const avatarInitial = name.charAt(0).toUpperCase();
 
-        // Header
+        // Update Header
         if (headerUserName) headerUserName.textContent = name;
         if (headerUserEmail) headerUserEmail.textContent = email;
         if (headerUserAvatar) headerUserAvatar.textContent = avatarInitial;
-
-        // Nav buttons
         if (loggedInNav) loggedInNav.classList.remove('hidden');
         if (loginButton) loginButton.classList.add('hidden');
 
-        // Index.html
+        // Update Index.html Dashboard
         if (dashboardTitle) dashboardTitle.textContent = `Welcome back, ${name}!`;
         if (loggedOutMessage) loggedOutMessage.classList.add('hidden');
         if (dashboard) dashboard.classList.remove('hidden');
 
-        // Profile.html
+        // Update Profile.html
         if (profileName) profileName.textContent = name;
         if (profileEmail) profileEmail.textContent = email;
         if (profileAvatar) profileAvatar.textContent = avatarInitial;
@@ -71,24 +78,23 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function showLoggedOutUI() {
-        // Header
+        // Update Header
         if (loggedInNav) loggedInNav.classList.add('hidden');
         if (loginButton) loginButton.classList.remove('hidden');
 
-        // Index.html
+        // Update Index.html
         if (loggedOutMessage) loggedOutMessage.classList.remove('hidden');
         if (dashboard) dashboard.classList.add('hidden');
 
-        // Clear storage
+        // Clear Storage
         localStorage.removeItem('hubUser');
 
-        // Redirect if on profile page
-        if (window.location.pathname.includes('profile.html')) {
-            window.location.href = 'index.html';
+        // Redirect if on protected pages
+        if (window.location.pathname.includes('profile.html') || window.location.pathname.includes('create_event.html')) {
+             window.location.href = 'index.html';
         }
     }
 
-    // --- Check Login Status on Page Load ---
     function checkLoginStatus() {
         const user = localStorage.getItem('hubUser');
         if (user) {
@@ -99,10 +105,11 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // --- Event Listeners ---
+    // Auth Event Listeners
     if (loginButton) loginButton.addEventListener('click', showModal);
     if (loginMessageButton) loginMessageButton.addEventListener('click', showModal);
     if (closeModalButton) closeModalButton.addEventListener('click', hideModal);
+    
     if (loginModal) {
         loginModal.addEventListener('click', (e) => {
             if (e.target === loginModal) hideModal();
@@ -127,89 +134,179 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // Mock Login Submit
     if (loginForm) {
         loginForm.addEventListener('submit', (e) => {
             e.preventDefault();
-            const email = document.getElementById('login-email').value || 'john@email.com';
-            const name = "John Doe";
+            const email = document.getElementById('login-email').value;
+            const name = "John Doe"; 
             localStorage.setItem('hubUser', JSON.stringify({ name, email }));
             showLoggedInUI(name, email);
         });
     }
 
-    if (registerForm) {
-        registerForm.addEventListener('submit', (e) => {
+    if (logoutButton) logoutButton.addEventListener('click', showLoggedOutUI);
+    if (profileLogoutButton) profileLogoutButton.addEventListener('click', showLoggedOutUI);
+
+    // ==========================================
+    // 3. EVENT CREATION LOGIC (POST)
+    // ==========================================
+    
+    if (eventForm) {
+        eventForm.addEventListener('submit', async (e) => {
             e.preventDefault();
-            const name = document.getElementById('register-name').value || "Jane Doe";
-            const email = document.getElementById('register-email').value || 'jane@email.com';
-            localStorage.setItem('hubUser', JSON.stringify({ name, email }));
-            showLoggedInUI(name, email);
-        });
-    }
 
-    if (logoutButton) {
-        logoutButton.addEventListener('click', showLoggedOutUI);
-    }
-    if (profileLogoutButton) {
-        profileLogoutButton.addEventListener('click', showLoggedOutUI);
-    }
+            const data = {
+                club_id: document.getElementById("eventClub").value,
+                event_title: document.getElementById("eventName").value,
+                description: document.getElementById("eventDescription").value,
+                event_date: document.getElementById("eventDate").value,
+                event_time: document.getElementById("eventTime").value,
+                location: document.getElementById("eventLocation").value,
+                created_by: 1 
+            };
 
-    // Run on load
-    checkLoginStatus();
-    loadEvents(); // call events loader here
-});
+            try {
+                const res = await fetch("/api/events", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(data)
+                });
 
-// --- Load Events Function ---
-async function loadEvents() {
-    if (!document.querySelector('.event-list')) return;
-
-    try {
-        const res = await fetch('/api/events');
-        if (!res.ok) throw new Error('Network response was not ok');
-
-        const events = await res.json();
-        const eventList = document.querySelector('.event-list');
-        eventList.innerHTML = '';
-
-        events.forEach(event => {
-            const card = document.createElement('div');
-            card.className = 'event-card';
-            card.setAttribute('data-id', event.event_id);
-
-            card.innerHTML = `
-                <h2>${event.event_title}</h2>
-                <p class="event-date">${new Date(event.event_date).toLocaleDateString()}</p>
-                <p class="event-location">${event.location}</p>
-                <p class="event-description">${event.description}</p>
-                <button class="delete-event-btn" style="
-                    margin-top:10px;
-                    background:#d9534f;
-                    color:white;
-                    border:none;
-                    padding:8px 12px;
-                    border-radius:6px;
-                    cursor:pointer;
-                ">Delete</button>
-            `;
-
-            eventList.appendChild(card);
-
-            const deleteBtn = card.querySelector('.delete-event-btn');
-            deleteBtn.addEventListener('click', async () => {
-                const id = card.getAttribute('data-id');
-                if (!confirm("Are you sure you want to delete this event?")) return;
-
-                try {
-                    const delRes = await fetch(`/api/events/${id}`, { method: 'DELETE' });
-                    if (!delRes.ok) throw new Error('Failed to delete');
-                    card.remove();
-                } catch (err) {
-                    alert("Failed to delete event.");
-                    console.error(err);
+                if (res.ok) {
+                    alert("Event created successfully!");
+                    window.location.href = "events.html";
+                } else {
+                    const errorData = await res.json();
+                    alert("Failed to create event: " + (errorData.error || res.statusText));
                 }
-            });
+            } catch (err) {
+                console.error("Fetch error:", err);
+                alert("Server error: " + err.message);
+            }
         });
-    } catch (err) {
-        console.error('Failed to load events:', err);
     }
-}
+
+    // ==========================================
+    // 4. EVENT LOADING LOGIC (GET)
+    // ==========================================
+
+    async function loadEvents() {
+        if (!eventListContainer) return; 
+
+        try {
+            const res = await fetch('/api/events');
+            if (!res.ok) throw new Error('Failed to fetch events');
+
+            const events = await res.json();
+            eventListContainer.innerHTML = ''; 
+
+            events.forEach(event => {
+                const card = document.createElement('div');
+                card.className = 'event-card';
+                card.setAttribute('data-id', event.event_id);
+
+                const dateObj = new Date(event.event_date);
+                const dateStr = dateObj.toLocaleDateString();
+
+                card.innerHTML = `
+                    <h2>${event.event_title}</h2>
+                    <p class="event-meta">
+                        <strong>Date:</strong> ${dateStr} at ${event.event_time || 'TBD'} <br>
+                        <strong>Location:</strong> ${event.location}
+                    </p>
+                    <p class="event-description">${event.description}</p>
+                    <button class="delete-event-btn" style="margin-top:10px; background:#d9534f; color:white; border:none; padding:8px 12px; border-radius:6px; cursor:pointer;">Delete</button>
+                `;
+
+                eventListContainer.appendChild(card);
+
+                const deleteBtn = card.querySelector('.delete-event-btn');
+                deleteBtn.addEventListener('click', async () => {
+                    if (!confirm("Are you sure you want to delete this event?")) return;
+                    try {
+                        const delRes = await fetch(`/api/events/${event.event_id}`, { method: 'DELETE' });
+                        if (delRes.ok) card.remove();
+                        else alert("Failed to delete event.");
+                    } catch (err) {
+                        console.error("Delete error:", err);
+                    }
+                });
+            });
+
+        } catch (err) {
+            console.error('Failed to load events:', err);
+            eventListContainer.innerHTML = '<p>Error loading events from database.</p>';
+        }
+    }
+
+    // ==========================================
+    // 5. CLUB LOADING LOGIC (NEW FOR CLUBS.HTML)
+    // ==========================================
+
+    async function loadClubs() {
+        // Only run if the 'clubs-grid' element exists (meaning we are on clubs.html)
+        if (!clubsGrid) return; 
+
+        try {
+            const res = await fetch('/api/clubs');
+            if (!res.ok) throw new Error('Failed to fetch clubs');
+
+            const clubs = await res.json();
+            clubsGrid.innerHTML = ''; // Clear loading text
+
+            if (clubs.length === 0) {
+                clubsGrid.innerHTML = '<p>No clubs found in the database.</p>';
+                return;
+            }
+
+            clubs.forEach(club => {
+                const card = document.createElement('div');
+                
+                // Styling to match your design
+                card.style.cssText = "border: 1px solid #eee; border-radius: 12px; padding: 24px; background: white; display: flex; flex-direction: column; gap: 16px;";
+                
+                // Color coding based on category
+                let iconBg = '#f0fdfa'; 
+                let iconColor = '#14b8a6'; 
+                
+                if (club.category === 'Arts') { iconBg = '#eff6ff'; iconColor = '#2563eb'; }
+                if (club.category === 'Humanities') { iconBg = '#fffbeb'; iconColor = '#d97706'; }
+                if (club.category === 'Science') { iconBg = '#fff1f2'; iconColor = '#e11d48'; }
+
+                const letter = club.icon_letter || (club.club_name ? club.club_name.charAt(0) : 'C');
+
+                card.innerHTML = `
+                    <div style="display: flex; align-items: center; gap: 16px;">
+                        <div class="club-icon" style="width: 48px; height: 48px; border-radius: 8px; background-color: ${iconBg}; color: ${iconColor}; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 20px;">
+                            ${letter}
+                        </div>
+                        <div>
+                            <h3 style="font-size: 18px; font-weight: 600;">${club.club_name}</h3>
+                            <p style="font-size: 14px; color: gray;">${club.category || 'General'}</p>
+                        </div>
+                    </div>
+                    <p style="font-size: 14px; color: #555; line-height: 1.5;">
+                        ${club.description}
+                    </p>
+                    <button class="btn btn-secondary" onclick="alert('Join feature coming in Sprint 2!')" style="width: 100%; margin-top: auto;">
+                        View Details
+                    </button>
+                `;
+
+                clubsGrid.appendChild(card);
+            });
+
+        } catch (err) {
+            console.error('Failed to load clubs:', err);
+            clubsGrid.innerHTML = '<p style="color:red">Error loading clubs. Ensure server is running.</p>';
+        }
+    }
+
+    // ==========================================
+    // 6. INITIALIZATION
+    // ==========================================
+    checkLoginStatus();
+    loadEvents();
+    loadClubs(); // <-- This runs the club loader!
+});
