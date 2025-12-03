@@ -146,34 +146,23 @@ const server = http.createServer(async (req, res) => {
 
     // DELETE /api/events/:id
     if (pathname.startsWith('/api/events/') && req.method === 'DELETE') {
-        const eventId = pathname.split('/')[3];
-        try {
-            const data = JSON.parse(body);
+      const eventId = pathname.split('/')[3];
 
-            // FETCH password for club associated with event
-            const [rows] = await db.query(
-                'SELECT club_password FROM clubs WHERE club_id = ?',
-                [data.club_id]
-            );
+      try {
+        await db.query('DELETE FROM events WHERE event_id = ?', [eventId]);
 
-            if (rows.length === 0 || rows[0].club_password !== data.password) {
-                res.writeHead(401, { 'Content-Type': 'application/json' });
-                res.end(JSON.stringify({ error: 'Invalid password' }));
-                return;
-            }
-
-            // DELETE event if password is correct
-
-            await db.query('DELETE FROM events WHERE event_id = ?', [eventId]);
-            res.writeHead(200, { 'Content-Type': 'application/json' });
-            res.end(JSON.stringify({ message: 'Event deleted' }));
-        } catch (error) {
-            res.writeHead(500, { 'Content-Type': 'application/json' });
-            res.end(JSON.stringify({ error: error.message }));
-        }
-        return;
+        res.writeHead(200, {
+          'Content-Type': 'application/json'
+        });
+        res.end(JSON.stringify({ message: 'Event deleted' }));
+      } catch (error) {
+        res.writeHead(500, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ error: error.message }));
+      }
+      return;
     }
-
+    
+   
     // --- ROSTER API (Restored from HEAD) ---
     if (pathname.startsWith('/api/rosters/') && req.method === 'GET') {
       const clubId = pathname.split('/')[3];
