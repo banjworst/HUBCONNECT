@@ -110,11 +110,13 @@ const server = http.createServer(async (req, res) => {
         res.writeHead(200, { 'Content-Type': 'application/json' });
         res.end(JSON.stringify(events));
       } catch (error) {
+        console.error("Error fetching events:", error); // <-- terminal will show full error now
         res.writeHead(500, { 'Content-Type': 'application/json' });
         res.end(JSON.stringify({ error: error.message }));
       }
       return;
     }
+
 
     // POST /api/events
     if (pathname === '/api/events' && req.method === 'POST') {
