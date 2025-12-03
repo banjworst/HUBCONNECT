@@ -1,18 +1,14 @@
-// server.js
 const http = require('http');
 const fs = require('fs');
 const path = require('path');
 const db = require('./config/db');
+
+// Port 80 is the standard HTTP port
 const PORT = 80;
 
 const server = http.createServer(async (req, res) => {
   console.log(`${req.method} Request: ${req.url}`);
 
-  // ==========================================
-  // 1. API ROUTES
-  // ==========================================
-  
-  // Helper to parse URL parts (ignores query strings like ?id=1)
   const urlParts = new URL(req.url, `http://${req.headers.host}`);
   const pathname = urlParts.pathname;
 
@@ -20,7 +16,7 @@ const server = http.createServer(async (req, res) => {
 
     // --- CLUBS API ---
 
-    // GET /api/clubs (From Kenny - Critical for displaying clubs)
+    // GET /api/clubs
     if (pathname === '/api/clubs' && req.method === 'GET') {
       try {
         const [clubs] = await db.query('SELECT * FROM clubs');
@@ -34,14 +30,13 @@ const server = http.createServer(async (req, res) => {
       return;
     }
 
-    // POST /api/clubs (Merged: Uses standard structure but kept simple)
+    // POST /api/clubs
     if (pathname === '/api/clubs' && req.method === 'POST') {
       let body = '';
       req.on('data', chunk => body += chunk.toString());
       req.on('end', async () => {
         try {
           const { club_name, description, category, icon_letter } = JSON.parse(body);
-          // Assuming your table has these columns. Adjust if different.
           const query = 'INSERT INTO clubs (club_name, description, category, icon_letter) VALUES (?, ?, ?, ?)';
           const [result] = await db.query(query, [club_name, description, category, icon_letter]);
           
@@ -55,7 +50,7 @@ const server = http.createServer(async (req, res) => {
       return;
     }
 
-    // PUT /api/clubs/:id - Update Club (Restored from HEAD)
+    // PUT /api/clubs/:id
     if (pathname.startsWith('/api/clubs/') && req.method === 'PUT') {
       const clubId = pathname.split('/')[3];
       let body = '';
@@ -76,7 +71,7 @@ const server = http.createServer(async (req, res) => {
       return;
     }
 
-    // POST /api/clubs/verify-password (Restored from HEAD)
+    // POST /api/clubs/verify-password
     if (pathname === '/api/clubs/verify-password' && req.method === 'POST') {
       let body = '';
       req.on('data', chunk => body += chunk.toString());
@@ -147,39 +142,26 @@ const server = http.createServer(async (req, res) => {
     // DELETE /api/events/:id
     if (pathname.startsWith('/api/events/') && req.method === 'DELETE') {
         const eventId = pathname.split('/')[3];
+        console.log(`🗑️ Processing DELETE for Event ID: ${eventId}`);
+
         try {
-            const data = JSON.parse(body);
-
-            // FETCH password for club associated with event
-            const [rows] = await db.query(
-                'SELECT club_password FROM clubs WHERE club_id = ?',
-                [data.club_id]
-            );
-
-            if (rows.length === 0 || rows[0].club_password !== data.password) {
-                res.writeHead(401, { 'Content-Type': 'application/json' });
-                res.end(JSON.stringify({ error: 'Invalid password' }));
-                return;
-            }
-
-            // DELETE event if password is correct
-
             await db.query('DELETE FROM events WHERE event_id = ?', [eventId]);
             res.writeHead(200, { 'Content-Type': 'application/json' });
             res.end(JSON.stringify({ message: 'Event deleted' }));
         } catch (error) {
+            console.error("❌ DELETE ERROR:", error.message);
             res.writeHead(500, { 'Content-Type': 'application/json' });
             res.end(JSON.stringify({ error: error.message }));
         }
         return;
     }
 
-    // --- ROSTER API (Restored from HEAD) ---
+    // --- ROSTER API ---
     if (pathname.startsWith('/api/rosters/') && req.method === 'GET') {
       const clubId = pathname.split('/')[3];
       try {
         const query = `
-        SELECT roster.roster_id, roster.member_name, roster.role 
+        SELECT roster.roster_id, member_name, role 
         FROM roster 
         JOIN clubs ON roster.club_id = clubs.club_id 
         WHERE clubs.club_id = ?
@@ -204,13 +186,9 @@ const server = http.createServer(async (req, res) => {
   // 2. STATIC FILE SERVING (HTML, CSS, JS)
   // ==========================================
   
-  // Default to index.html if asking for root "/"
   let filePath = pathname === '/' ? 'index.html' : pathname.substring(1);
-  
-  // Resolve absolute path
   filePath = path.resolve(__dirname, filePath);
 
-  // Get extension for Content-Type
   const extname = path.extname(filePath);
   let contentType = 'text/html';
   if (extname === '.css') contentType = 'text/css';
@@ -221,11 +199,9 @@ const server = http.createServer(async (req, res) => {
   fs.readFile(filePath, (err, content) => {
     if (err) {
       if (err.code === 'ENOENT') {
-        // File not found
         res.writeHead(404);
         res.end('404 File Not Found');
       } else {
-        // Server error
         res.writeHead(500);
         res.end(`Server Error: ${err.code}`);
       }
@@ -237,5 +213,5 @@ const server = http.createServer(async (req, res) => {
 });
 
 server.listen(PORT, '0.0.0.0', () => {
-  console.log(`✅ Server running on port 80`);
+  console.log(`✅ Server running on Port ${PORT}`);
 });
