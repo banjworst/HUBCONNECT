@@ -192,6 +192,10 @@ const server = http.createServer(async (req, res) => {
   // ==========================================
   // 2. STATIC FILE SERVING (HTML, CSS, JS)
   // ==========================================
+
+  if (!path.extname(pathname) && pathname !== '/') {
+  req.url = pathname + '.html';
+  }
   
   // Default to index.html if asking for root "/"
   let filePath = pathname === '/' ? 'index.html' : pathname.substring(1);
