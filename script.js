@@ -134,15 +134,13 @@ document.addEventListener('DOMContentLoaded', () => {
     if (profileLogoutButton) profileLogoutButton.addEventListener('click', showLoggedOutUI);
 
     // ==========================================
-    // 3. EVENT CREATION LOGIC (UPDATED FOR BUTTON CLICK)
+    // 3. EVENT CREATION LOGIC (BUTTON CLICK)
     // ==========================================
     
-    // Find the button directly
     const publishBtn = document.getElementById('publishBtn'); 
 
     if (publishBtn) {
         publishBtn.addEventListener('click', async () => {
-            // Gather data from the form inputs
             const data = {
                 club_id: document.getElementById("eventClub").value,
                 event_title: document.getElementById("eventName").value,
@@ -154,9 +152,6 @@ document.addEventListener('DOMContentLoaded', () => {
             };
 
             try {
-                console.log("🚀 Sending Data via Button Click...");
-                
-                // Using relative path to support teammates and satisfy Safari
                 const res = await fetch("/api/events", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
@@ -178,7 +173,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // ==========================================
-    // 4. EVENT LOADING LOGIC (GET & DELETE)
+    // 4. EVENT LOADING LOGIC (GET + PASSWORD REDIRECT DELETE)
     // ==========================================
 
     async function loadEvents() {
@@ -198,7 +193,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 const dateObj = new Date(event.event_date);
                 const dateStr = dateObj.toLocaleDateString();
-
                 const title = event.event_title || event.title || "Untitled Event";
 
                 card.innerHTML = `
@@ -213,25 +207,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 eventListContainer.appendChild(card);
 
+                // UPDATED DELETE HANDLER: redirect to password page
                 const deleteBtn = card.querySelector('.delete-event-btn');
-                deleteBtn.addEventListener('click', async () => {
-                    if (!confirm("Are you sure you want to delete this event?")) return;
-                    
-                    try {
-                        const delRes = await fetch(`/api/events/${event.event_id}`, { 
-                            method: 'DELETE' 
-                        });
-                        
-                        if (delRes.ok) {
-                            card.remove(); 
-                        } else {
-                            const errData = await delRes.json();
-                            alert("Failed to delete: " + (errData.error || delRes.statusText));
-                        }
-                    } catch (err) {
-                        console.error("Delete error:", err);
-                        alert("Network Error: Could not delete.");
-                    }
+                deleteBtn.addEventListener('click', () => {
+                    window.location.href =
+                        `/enter-password.html?club=${event.club_id}&action=delete&target=event&id=${event.event_id}`;
                 });
             });
 
