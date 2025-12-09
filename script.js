@@ -222,9 +222,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // ==========================================
-    // 5. CLUB LOADING LOGIC
+    // 5. CLUB LOADING LOGIC (updated with join club functionality)
     // ==========================================
-
     async function loadClubs() {
         if (!clubsGrid) return; 
 
@@ -242,8 +241,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
             clubs.forEach(club => {
                 const card = document.createElement('div');
+                // Basic Card Styling
                 card.style.cssText = "border: 1px solid #eee; border-radius: 12px; padding: 24px; background: white; display: flex; flex-direction: column; gap: 16px;";
                 
+                // Icon Colors
                 let iconBg = '#f0fdfa'; let iconColor = '#14b8a6'; 
                 if (club.category === 'Arts') { iconBg = '#eff6ff'; iconColor = '#2563eb'; }
                 if (club.category === 'Humanities') { iconBg = '#fffbeb'; iconColor = '#d97706'; }
@@ -264,18 +265,63 @@ document.addEventListener('DOMContentLoaded', () => {
                     <p style="font-size: 14px; color: #555; line-height: 1.5;">
                         ${club.description}
                     </p>
-                    <button class="btn btn-secondary" onclick="alert('Join feature coming in Sprint 2!')" style="width: 100%; margin-top: auto;">
-                        View Details
+                    
+                    <button class="join-club-btn btn btn-primary" style="width: 100%; margin-top: auto;">
+                        Join Club
                     </button>
                 `;
+
                 clubsGrid.appendChild(card);
-            });
+
+                // --- JOIN LOGIC ---
+                const joinBtn = card.querySelector('.join-club-btn');
+                
+                // Update button text to match the new behavior
+                joinBtn.textContent = "Request to Join";
+
+                joinBtn.addEventListener('click', async () => {
+                    // 1. Get Current User Name
+                    const userJson = localStorage.getItem('hubUser');
+                    if (!userJson) {
+                        alert("You must be logged in to join a club.");
+                        return;
+                    }
+                    const userName = JSON.parse(userJson).name;
+
+                    // 2. Confirm intent (Optional, but nice UI)
+                    if (!confirm(`Send a request to join ${club.club_name}?`)) return;
+
+                    try {
+                        // 3. Send Request directly (No password needed)
+                        const joinRes = await fetch('/api/rosters', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ club_id: club.club_id, member_name: userName })
+                        });
+
+                        if (joinRes.ok) {
+                            alert(`Request sent! An officer will review your application.`);
+                            joinBtn.textContent = "Requested ⏳";
+                            joinBtn.disabled = true;
+                            joinBtn.style.backgroundColor = "#fbbf24"; // Yellow/Orange for Pending
+                            joinBtn.style.color = "black";
+                        } else {
+                            alert("Failed to send request.");
+                        }
+
+                    } catch (err) {
+                        console.error(err);
+                        alert("Server Error.");
+                    }
+                });
+            }); 
 
         } catch (err) {
             console.error('Failed to load clubs:', err);
-            clubsGrid.innerHTML = '<p style="color:red">Error loading clubs. Ensure server is running.</p>';
+            clubsGrid.innerHTML = '<p style="color:red">Error loading clubs.</p>';
         }
     }
+
 
     // ==========================================
     // 6. INITIALIZATION

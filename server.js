@@ -175,6 +175,31 @@ const server = http.createServer(async (req, res) => {
       }
       return;
     }
+   // POST /api/rosters (Join a Club)
+    if (pathname === '/api/rosters' && req.method === 'POST') {
+      let body = '';
+      req.on('data', chunk => body += chunk.toString());
+      req.on('end', async () => {
+        try {
+          // We get club_id and member_name from the frontend
+          const { club_id, member_name } = JSON.parse(body);
+          
+          // Insert into SPECIFIC table columns
+          // default mem_status to 'active'
+          const query = 'INSERT INTO roster (club_id, member_name, mem_status) VALUES (?, ?, ?)';
+          
+          await db.query(query, [club_id, member_name, 'pending']);
+          
+          res.writeHead(201, { 'Content-Type': 'application/json' });
+          res.end(JSON.stringify({ message: 'Joined club successfully' }));
+        } catch (error) {
+          console.error("Join Error:", error);
+          res.writeHead(500, { 'Content-Type': 'application/json' });
+          res.end(JSON.stringify({ error: error.message }));
+        }
+      });
+      return;
+    }
 
     // 404 for unknown API routes
     res.writeHead(404, { 'Content-Type': 'application/json' });
