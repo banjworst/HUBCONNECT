@@ -24,6 +24,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const profileName = document.getElementById('profileName');
     const profileEmail = document.getElementById('profileEmail');
     const profileAvatar = document.getElementById('profileAvatar');
+    const profileMajor = document.getElementById('profileMajor');
+    const profileYear = document.getElementById('profileYear');
+    const editProfileBtn = document.getElementById('editProfileBtn');
 
     // Modals
     const loginModal = document.getElementById('loginModal');
@@ -33,6 +36,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const registerForm = document.getElementById('registerForm');
     const toggleToRegister = document.getElementById('toggleToRegister');
     const toggleToLogin = document.getElementById('toggleToLogin');
+    const editProfileModal = document.getElementById('editProfileModal');
+    const closeEditProfileButton = document.getElementById('closeEditProfileButton');
+    const editProfileForm = document.getElementById('editProfileForm');
+    const cancelEditProfileBtn = document.getElementById('cancelEditProfileBtn');
 
     // Page Specific Elements
     const eventForm = document.getElementById('event-form'); 
@@ -67,6 +74,15 @@ document.addEventListener('DOMContentLoaded', () => {
         if (profileName) profileName.textContent = name;
         if (profileEmail) profileEmail.textContent = email;
         if (profileAvatar) profileAvatar.textContent = avatarInitial;
+        // populate optional profile fields if available in localStorage
+        try {
+            const userObj = JSON.parse(localStorage.getItem('hubUser') || '{}');
+            if (profileMajor) profileMajor.textContent = userObj.major || 'Not Set';
+            if (profileYear) profileYear.textContent = userObj.year || 'Not Set';
+        } catch (e) {
+            // ignore parse errors
+        }
+
         hideModal();
     }
 
@@ -127,6 +143,64 @@ document.addEventListener('DOMContentLoaded', () => {
             const name = "John Doe"; 
             localStorage.setItem('hubUser', JSON.stringify({ name, email }));
             showLoggedInUI(name, email);
+        });
+    }
+
+    // Edit Profile modal handlers
+    if (editProfileBtn) {
+        editProfileBtn.addEventListener('click', (e) => {
+            const userJson = localStorage.getItem('hubUser');
+            if (!userJson) {
+                alert('Please login to edit your profile.');
+                return;
+            }
+            const user = JSON.parse(userJson);
+            // Prefill form inputs if modal exists
+            if (editProfileModal && editProfileForm) {
+                const nameInput = document.getElementById('editProfileName');
+                const emailInput = document.getElementById('editProfileEmail');
+                const majorInput = document.getElementById('editProfileMajor');
+                const yearInput = document.getElementById('editProfileYear');
+                if (nameInput) nameInput.value = user.name || '';
+                if (emailInput) emailInput.value = user.email || '';
+                if (majorInput) majorInput.value = user.major || '';
+                if (yearInput) yearInput.value = user.year || '';
+                editProfileModal.classList.remove('hidden');
+            }
+        });
+    }
+
+    if (closeEditProfileButton) {
+        closeEditProfileButton.addEventListener('click', () => {
+            if (editProfileModal) editProfileModal.classList.add('hidden');
+        });
+    }
+
+    if (cancelEditProfileBtn) {
+        cancelEditProfileBtn.addEventListener('click', () => {
+            if (editProfileModal) editProfileModal.classList.add('hidden');
+        });
+    }
+
+    if (editProfileForm) {
+        editProfileForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const name = document.getElementById('editProfileName').value;
+            const email = document.getElementById('editProfileEmail').value;
+            const major = document.getElementById('editProfileMajor').value;
+            const year = document.getElementById('editProfileYear').value;
+
+            // Save to localStorage
+            const userObj = { name, email, major, year };
+            localStorage.setItem('hubUser', JSON.stringify(userObj));
+
+            // Update UI
+            showLoggedInUI(name, email);
+            if (profileMajor) profileMajor.textContent = major || 'Not Set';
+            if (profileYear) profileYear.textContent = year || 'Not Set';
+
+            if (editProfileModal) editProfileModal.classList.add('hidden');
+            alert('Profile updated');
         });
     }
 
