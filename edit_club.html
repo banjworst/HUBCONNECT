@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Club - Hub Connect</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* Dashboard specific layout */
+        .admin-grid { 
+            display: grid; 
+            grid-template-columns: 1fr 1fr; 
+            gap: 32px; 
+        }
+        
+        .member-item {
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center;
+            padding: 16px; 
+            border-bottom: 1px solid #eee;
+        }
+
+        .member-item:last-child { border-bottom: none; }
+
+        /* Status Badges */
+        .status-badge { font-size: 12px; font-weight: bold; text-transform: uppercase; }
+        .status-pending { color: #d97706; background: #fef3c7; padding: 2px 6px; border-radius: 4px; }
+        .status-active { color: #059669; background: #d1fae5; padding: 2px 6px; border-radius: 4px; }
+
+        /* Action Buttons */
+        .btn-action {
+            border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: 600; transition: opacity 0.2s;
+        }
+        .btn-accept { background: #10b981; color: white; margin-right: 8px; }
+        .btn-reject { background: #ef4444; color: white; }
+        .btn-kick { color: #dc2626; background: transparent; text-decoration: underline; }
+
+        @media (max-width: 768px) { .admin-grid { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body style="background-color: #f9fafb;">
+
+    <header>
+        <div class="header-container">
+            <a href="index.html" class="logo">HUB CONNECT</a>
+            <div class="header-right">
+                <nav id="loggedInNav" class="header-nav hidden">
+                    <a href="index.html" class="btn btn-secondary">Dashboard</a>
+                    <a href="clubs.html" class="view-clubs-btn">Clubs</a>
+                    <a href="events.html" class="view-events-btn">Events</a>
+                    <a href="profile.html" class="user-profile">
+                        <div class="user-info"><p class="user-name" id="headerUserName">Loading...</p></div>
+                        <div class="user-avatar" id="headerUserAvatar">?</div>
+                    </a>
+                    <button id="logoutButton" class="btn btn-secondary">Logout</button>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <h1 class="page-title">Club Manager</h1>
+
+        <div class="admin-grid">
+            
+            <div class="card">
+                <div class="card-header">
+                    <h2>✏️ Edit Details</h2>
+                </div>
+                <form id="editClubForm">
+                    <input type="hidden" id="clubId">
+                    
+                    <div class="form-group">
+                        <label>Club Name</label>
+                        <input type="text" id="clubName" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Category</label>
+                        <select id="clubCategory">
+                            <option value="General">General Interest</option>
+                            <option value="Science">Science & Tech</option>
+                            <option value="Arts">Arts & Culture</option>
+                            <option value="Humanities">Humanities</option>
+                            <option value="Sports">Sports & Fitness</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Icon Letter (1 Char)</label>
+                        <input type="text" id="clubIcon" maxlength="1" style="width: 60px; text-align: center; text-transform: uppercase;">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Description</label>
+                        <textarea id="clubDesc" rows="6" required></textarea>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary" style="width: 100%;">Save Changes</button>
+                </form>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h2>👥 Roster Management</h2>
+                </div>
+                <div id="rosterList">
+                    <p style="color: gray;">Loading members...</p>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <div id="loggedOutMessage" class="hidden"></div>
+    <div id="dashboard" class="hidden"></div>
+    <button id="loginButton" class="hidden"></button>
+    <button id="loginMessageButton" class="hidden"></button>
+    <div id="loginModal" class="hidden"></div>
+    <p id="headerUserEmail" class="hidden"></p>
+
+    <script src="script.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            // 1. Get Club ID from URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const clubId = urlParams.get('id');
+
+            if (!clubId) {
+                alert("No club ID specified.");
+                window.location.href = 'index.html';
+                return;
+            }
+
+            document.getElementById('clubId').value = clubId;
+
+            // 2. Load Club Details
+            try {
+                const res = await fetch('/api/clubs');
+                const clubs = await res.json();
+                const club = clubs.find(c => c.club_id == clubId);
+
+                if (club) {
+                    document.getElementById('clubName').value = club.club_name;
+                    document.getElementById('clubCategory').value = club.category || 'General';
+                    document.getElementById('clubIcon').value = club.icon_letter || 'C';
+                    document.getElementById('clubDesc').value = club.description;
+                }
+            } catch (err) { console.error("Error loading details:", err); }
+
+            // 3. Load Roster
+            loadRoster(clubId);
+
+            // 4. Save Details Handler
+            document.getElementById('editClubForm').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const data = {
+                    club_name: document.getElementById('clubName').value,
+                    description: document.getElementById('clubDesc').value,
+                    category: document.getElementById('clubCategory').value,
+                    icon_letter: document.getElementById('clubIcon').value.toUpperCase()
+                };
+
+                try {
+                    const res = await fetch(`/api/clubs/${clubId}`, {
+                        method: 'PUT',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(data)
+                    });
+
+                    if (res.ok) alert("✅ Club Details Updated!");
+                    else alert("Update failed.");
+                } catch(err) { alert("Server Error"); }
+            });
+        });
+
+        // ROSTER FUNCTIONS
+        async function loadRoster(clubId) {
+            const container = document.getElementById('rosterList');
+            container.innerHTML = '<p style="color:gray;">Loading...</p>';
+
+            try {
+                const res = await fetch(`/api/rosters/${clubId}`);
+                const members = await res.json();
+                
+                if (members.length === 0) {
+                    container.innerHTML = '<p>No members yet.</p>';
+                    return;
+                }
+
+                container.innerHTML = '';
+                
+                // Sort: Pending first
+                members.sort((a, b) => {
+                    if (a.mem_status === 'pending') return -1;
+                    if (a.mem_status !== 'pending' && b.mem_status === 'pending') return 1;
+                    return 0;
+                });
+
+                members.forEach(m => {
+                    const div = document.createElement('div');
+                    div.className = 'member-item';
+                    
+                    let actions = '';
+                    let statusBadge = `<span class="status-badge status-active">Active</span>`;
+
+                    if (m.mem_status === 'pending') {
+                        statusBadge = `<span class="status-badge status-pending">PENDING ⏳</span>`;
+                        actions = `
+                            <button class="btn-action btn-accept" onclick="updateMember(${m.roster_id}, 'active')">Accept</button>
+                            <button class="btn-action btn-reject" onclick="updateMember(${m.roster_id}, 'rejected')">Reject</button>
+                        `;
+                    } else if (m.role !== 'Officer') {
+                        actions = `<button class="btn-action btn-kick" onclick="updateMember(${m.roster_id}, 'rejected')">Kick</button>`;
+                    } else {
+                        actions = `<span style="font-size:12px; color:#888;">Officer</span>`;
+                    }
+
+                    div.innerHTML = `
+                        <div>
+                            <div style="font-weight:600; font-size:15px;">${m.member_name}</div>
+                            <div style="margin-top:4px;">${statusBadge} <span style="font-size:12px; color:gray;">(${m.role})</span></div>
+                        </div>
+                        <div>${actions}</div>
+                    `;
+                    container.appendChild(div);
+                });
+
+            } catch (err) { console.error(err); }
+        }
+
+        async function updateMember(rosterId, newStatus) {
+            const actionText = newStatus === 'active' ? "Approve" : "Remove";
+            if (!confirm(`${actionText} this user?`)) return;
+
+            try {
+                const res = await fetch(`/api/rosters/${rosterId}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ mem_status: newStatus })
+                });
+
+                if (res.ok) {
+                    const urlParams = new URLSearchParams(window.location.search);
+                    loadRoster(urlParams.get('id'));
+                } else {
+                    alert("Failed to update member.");
+                }
+            } catch(e) { console.error(e); }
+        }
+    </script>
+
+</body>
+</html>

@@ -11,30 +11,18 @@
 
     <header>
         <div class="header-container">
-            <a href="/" class="logo">
-                HUB CONNECT
-            </a>
-            
+            <a href="index.html" class="logo">HUB CONNECT</a>
             <div class="header-right">
                 <nav id="loggedInNav" class="header-nav hidden">
-                    <a href="clubs.html">
-                        <button class="view-clubs-btn">View Other Clubs</button>
-                    </a>
-                    <a href="events.html">
-                        <button class="view-events-btn">View All Events</button>
-                    </a>
-    
+                    <a href="index.html" class="btn btn-secondary">Dashboard</a>
+                    <a href="clubs.html" class="view-clubs-btn">Clubs</a>
+                    <a href="events.html" class="view-events-btn">Events</a>
                     <a href="profile.html" class="user-profile">
-                        <div class="user-info">
-                            <p class="user-name" id="headerUserName">John Doe</p>
-                            <p class="user-email" id="headerUserEmail">john@email.com</p>
-                        </div>
-                        <div class="user-avatar" id="headerUserAvatar">JD</div>
+                        <div class="user-info"><p class="user-name" id="headerUserName">Loading...</p></div>
+                        <div class="user-avatar" id="headerUserAvatar">?</div>
                     </a>
                     <button id="logoutButton" class="btn btn-secondary">Logout</button>
                 </nav>
-
-                <button id="loginButton" class="btn btn-primary">Login</button>
             </div>
         </div>
     </header>
@@ -52,12 +40,12 @@
 
                 <div class="form-group">
                     <label for="eventClub">Host Club</label>
-                    <select id="eventClub" required style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
-                        <option value="" disabled selected>Select a club...</option>
-                        <option value="1">Chess Club</option>
-                        <option value="2">Robotics Team</option>
-                        <option value="3">Debate Society</option>
+                    <select id="eventClub" required>
+                        <option value="" disabled selected>Loading your clubs...</option>
                     </select>
+                    <p id="noClubsMsg" style="color: red; font-size: 12px; display: none; margin-top: 4px;">
+                        You must be an Officer of a club to create events.
+                    </p>
                 </div>
 
                 <div style="display: flex; gap: 16px;">
@@ -81,7 +69,7 @@
                     <textarea id="eventDescription" rows="5" required placeholder="Describe the event..."></textarea>
                 </div>
 
-                <button class="btn btn-primary btn-large" style="width: 100%; margin-top: 10px;" type="button" id="publishBtn">
+                <button class="btn btn-primary btn-large" style="width: 100%; margin-top: 10px;" id="publishBtn">
                     Publish Event
                 </button>
             </form>
@@ -92,73 +80,13 @@
         <p>&copy; 2025 Hub Connect. All rights reserved.</p>
     </footer>
 
-    <div id="loginModal" class="modal-overlay hidden">
-        <div id="loginModalContent" class="modal-content">
-            <div class="modal-header">
-                <h2 id="modalTitle">Login to Hub Connect</h2>
-                <button id="closeModalButton" class="modal-close-btn">&times;</button>
-            </div>
-            <div class="modal-body">
-                <form id="loginForm">
-                    <div class="form-group">
-                        <label for="login-email">Email Address</label>
-                        <input type="email" id="login-email" value="john@email.com" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="login-password">Password</label>
-                        <input type="password" id="login-password" value="password" required>
-                    </div>
-                    <button type="submit" class="btn btn-primary" style="width: 100%;">Sign In</button>
-                    <p class="form-toggle-text">Don't have an account? <a href="#" id="toggleToRegister" class="form-toggle-link">Register</a></p>
-                </form>
-                <form id="registerForm" class="hidden">
-                    <div class="form-group">
-                        <label for="register-name">Full Name</label>
-                        <input type="text" id="register-name" value="Jane Doe" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="register-email">Email Address</label>
-                        <input type="email" id="register-email" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="register-password">Password</label>
-                        <input type="password" id="register-password" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="confirm-password">Confirm Password</label>
-                        <input type="password" id="confirm-password" required>
-                    </div>
-                    <button type="submit" class="btn btn-primary" style="width: 100%;">Create Account</button>
-                    <p class="form-toggle-text">Already have an account? <a href="#" id="toggleToLogin" class="form-toggle-link">Login</a></p>
-                </form>
-            </div>
-        </div>
-    </div>
+    <div id="loggedOutMessage" class="hidden"></div>
+    <div id="dashboard" class="hidden"></div>
+    <button id="loginButton" class="hidden"></button>
+    <button id="loginMessageButton" class="hidden"></button>
+    <div id="loginModal" class="hidden"></div>
+    <p id="headerUserEmail" class="hidden"></p>
 
-    <script>
-        document.getElementById("event-form").addEventListener("submit", (e) => {
-            e.preventDefault(); // Stop page reload
-
-            // 1. Gather data
-            const eventData = {
-                title: document.getElementById("eventName").value,
-                club_id: document.getElementById("eventClub").value,
-                date: document.getElementById("eventDate").value,
-                time: document.getElementById("eventTime").value,
-                location: document.getElementById("eventLocation").value,
-                description: document.getElementById("eventDescription").value
-            };
-
-            console.log("Creating Event:", eventData);
-
-            // 2. Mock success (In Sprint 2, this will be a real fetch() call)
-            alert("Success! Event '" + eventData.title + "' created.");
-            
-            // 3. Redirect back to the events list
-            window.location.href = "events.html"; 
-        });
-    </script>
-    
     <script src="script.js"></script>
 </body>
 </html>

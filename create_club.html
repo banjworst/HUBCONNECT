@@ -1,81 +1,50 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta charset="UTF-8">
     <title>Create Club</title>
     <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
-    <!-- HEADER (same on every page) -->
     <header>
         <div class="header-container">
-            <a href="index.html" class="logo">HubConnect</a>
+            <a href="index.html" class="logo">
+                HUB CONNECT
+            </a>
+            
             <div class="header-right">
-                <a href="clubs.html" class="view-clubs-btn">Clubs</a>
-                <a href="events.html" class="view-events-btn">Events</a>
+                <nav id="loggedInNav" class="header-nav hidden">
+                    
+                    <a href="index.html" class="btn btn-secondary">Dashboard</a>
+                    <a href="clubs.html" class="view-clubs-btn">Clubs</a>
+                    <a href="events.html" class="view-events-btn">Events</a>
 
-                <a href="profile.html" class="user-profile">
-                    <div class="user-info">
-                        <p class="user-name">Student Guy</p>
-                        <p class="user-email">student@example.com</p>
-                    </div>
-                    <div class="user-avatar">J</div>
-                </a>
+                    <a href="profile.html" class="user-profile">
+                        <div class="user-info">
+                            <p class="user-name" id="headerUserName">Loading...</p>
+                        </div>
+                        <div class="user-avatar" id="headerUserAvatar">?</div>
+                    </a>
+
+                    <button id="logoutButton" class="btn btn-secondary">Logout</button>
+                </nav>
+                
+                <button id="loginButton" class="btn btn-primary">Login</button>
             </div>
         </div>
     </header>
-
-    <main class="container">
-        <h1 class="page-title">Create a New Club</h1>
-
-        <form id="club-form" class="club-form">
-            <div class="form-group">
-                <label>Club Name</label>
-                <input type="text" id="clubName" required>
+    <main class="container" style="max-width: 600px;">
+        <h1>Start a New Club</h1>
+        <div class="card">
+            <div class="form-group"><label>Club Name</label><input type="text" id="clubName"></div>
+            <div class="form-group"><label>Category</label>
+                <select id="clubCategory"><option>General</option><option>Science</option><option>Arts</option></select>
             </div>
-
-            <div class="form-group">
-                <label>Description</label>
-                <textarea id="clubDescription" required></textarea>
-            </div>
-
-            <button class="btn btn-primary btn-large" type="submit">Create Club</button>
-        </form>
+            <div class="form-group"><label>Icon Letter</label><input type="text" id="clubIcon" maxlength="1"></div>
+            <div class="form-group"><label>Description</label><textarea id="clubDesc"></textarea></div>
+            <button id="createClubBtn" class="btn btn-primary" style="width:100%">Create Club</button>
+        </div>
     </main>
-
-    <script>
-    document.getElementById("club-form").addEventListener("submit", async (e) => {
-        e.preventDefault();
-
-        const data = {
-            club_name: document.getElementById("clubName").value,
-            description: document.getElementById("clubDescription").value
-        };
-
-        try {
-            const res = await fetch("/api/clubs", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(data)
-            });
-    
-            if (res.ok) {
-                alert("Club created successfully!");
-                window.location.href = "view_clubs.html";
-            } else {
-                const errorData = await res.json();
-                alert("Failed to create club: " + (errorData.error || res.status));
-                console.error(errorData);
-            }
-        } catch (err) {
-            console.error("Fetch error:", err);
-            alert("Failed to create club: " + err.message);
-        }
-    });
-    </script>
-
+    <script src="script.js"></script>
 </body>
 </html>
-

@@ -1,688 +1,421 @@
-/* --- BASE STYLES & FONT --- */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+/* =========================================
+   1. BASE RESET & FONTS
+   ========================================= */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
 * {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
 body {
-  font-family: 'Inter', sans-serif;
-  background-color: #f8f9fa; /* Lighter gray background */
-  color: #333;
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
+    font-family: 'Inter', sans-serif;
+    background-color: #f9fafb; /* Light Gray Background */
+    color: #1f2937; /* Dark Gray Text */
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    line-height: 1.5;
 }
 
-/* --- HEADER --- */
+/* --- CRITICAL UTILITY --- */
+.hidden {
+    display: none !important;
+}
+
+/* =========================================
+   2. HEADER & NAVIGATION
+   ========================================= */
 header {
-  background-color: white;
-  border-bottom: 1px solid #eee;
-  padding: 16px 32px;
-  position: sticky;
-  top: 0;
-  z-index: 10;
+    background-color: white;
+    border-bottom: 1px solid #e5e7eb;
+    padding: 16px 32px;
+    position: sticky;
+    top: 0;
+    z-index: 40; /* Above content, below modal */
 }
 
 .header-container {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  max-width: 1200px;
-  margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
 }
 
 .logo {
-  font-weight: 700;
-  font-size: 18px;
-  letter-spacing: 1px;
-  text-decoration: none;
-  color: #4f46e5; /* Indigo color for logo */
+    font-size: 20px;
+    font-weight: 800;
+    color: #4f46e5; /* Indigo 600 */
+    text-decoration: none;
+    letter-spacing: -0.5px;
 }
 
 .header-right {
-  display: flex;
-  align-items: center;
-  gap: 24px;
+    display: flex;
+    align-items: center;
 }
 
 .header-nav {
-  display: flex;
-  align-items: center;
-  gap: 24px;
+    display: flex;
+    align-items: center;
+    gap: 16px; /* Spacing between nav items */
 }
 
-.view-clubs-btn {
-  background-color: #f0f5ff; /* Light indigo */
-  border: 1px solid #d6e4ff;
-  color: #4f46e5; /* Indigo */
-  padding: 8px 16px;
-  border-radius: 6px;
-  cursor: pointer;
-  font-size: 14px;
-  font-weight: 600;
-  transition: background-color 0.2s ease;
-}
-
-.view-clubs-btn:hover {
-  background-color: #e6edff;
-}
-
-.view-events-btn {
-  background-color: #f0f5ff; /* Light indigo */
-  border: 1px solid #d6e4ff;
-  color: #4f46e5; /* Indigo */
-  padding: 8px 16px;
-  border-radius: 6px;
-  cursor: pointer;
-  font-size: 14px;
-  font-weight: 600;
-  transition: background-color 0.2s ease;
-}
-
-.view-events-btn:hover {
-  background-color: #e6edff;
-}
-
-
+/* --- USER PROFILE BADGE (Header) --- */
 .user-profile {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  text-decoration: none;
-  padding: 4px;
-  border-radius: 8px;
-  transition: background-color 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    padding: 6px 12px;
+    border-radius: 8px;
+    transition: background-color 0.2s;
+    cursor: pointer;
+    border: 1px solid transparent;
 }
 
 .user-profile:hover {
-  background-color: #f5f5f5;
+    background-color: #f3f4f6;
+    border-color: #e5e7eb;
 }
 
 .user-info {
-  text-align: right;
+    text-align: right;
+    line-height: 1.2;
 }
 
 .user-name {
-  font-size: 14px;
-  font-weight: 600;
-  color: #333;
+    font-size: 14px;
+    font-weight: 600;
+    color: #374151;
 }
 
-.user-email {
-  font-size: 12px;
-  color: gray;
+/* Hide email in header to keep it clean */
+.user-email-hidden {
+    display: none;
 }
 
 .user-avatar {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  background-color: #4f46e5; /* Indigo */
-  color: white;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: bold;
-  font-size: 14px;
+    width: 36px;
+    height: 36px;
+    background-color: #4f46e5;
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 14px;
 }
 
-/* --- MAIN LAYOUT & FOOTER --- */
-.hidden {
-  display: none !important;
+/* =========================================
+   3. UNIFIED BUTTON STYLES
+   ========================================= */
+/* Base Button Style */
+.btn, .view-clubs-btn, .view-events-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 18px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    border: 1px solid transparent;
+    font-family: 'Inter', sans-serif;
 }
 
-main.container {
-  max-width: 1200px;
-  width: 100%;
-  margin: 32px auto;
-  padding: 0 32px;
-  flex-grow: 1;
-}
-
-.footer {
-  background-color: white;
-  border-top: 1px solid #eee;
-  padding: 24px 32px;
-  text-align: center;
-  color: #888;
-  font-size: 14px;
-  margin-top: 32px;
-}
-
-/* --- BUTTONS --- */
-.btn {
-  padding: 10px 16px;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  font-size: 14px;
-  font-weight: 600;
-  transition: all 0.2s ease;
-  text-decoration: none;
-  display: inline-block;
-}
-
+/* Primary Action (Login, Create, Join) */
 .btn-primary {
-  background-color: #4f46e5; /* Indigo */
-  color: white;
+    background-color: #4f46e5;
+    color: white;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
 }
 .btn-primary:hover {
-  background-color: #4338ca;
+    background-color: #4338ca;
 }
 
+/* Secondary Action (Nav Links, Cancel, Manage) */
+.btn-secondary, .view-clubs-btn, .view-events-btn {
+    background-color: white;
+    color: #374151;
+    border: 1px solid #d1d5db;
+}
+.btn-secondary:hover, .view-clubs-btn:hover, .view-events-btn:hover {
+    background-color: #f9fafb;
+    border-color: #9ca3af;
+}
+
+/* Destructive Action (Delete, Reject) */
+.btn-delete, .btn-reject {
+    background-color: #ef4444;
+    color: white;
+}
+.btn-delete:hover, .btn-reject:hover {
+    background-color: #dc2626;
+}
+
+/* Success Action (Accept) */
+.btn-accept {
+    background-color: #10b981;
+    color: white;
+}
+.btn-accept:hover {
+    background-color: #059669;
+}
+
+/* Pending State (Disabled) */
+.btn-pending {
+    background-color: #f59e0b;
+    color: white;
+    cursor: not-allowed;
+    width: 100%;
+}
+
+/* Manage Button (Full Width) */
+.btn-manage {
+    width: 100%;
+    text-align: center;
+}
+
+/* Large Button (Landing Page) */
 .btn-large {
-  padding: 12px 24px;
-  font-size: 16px;
+    padding: 14px 28px;
+    font-size: 16px;
 }
 
-.btn-secondary {
-  background-color: #f3f4f6; /* Gray 100 */
-  color: #374151; /* Gray 700 */
-  border: 1px solid #e5e7eb; /* Gray 200 */
-}
-.btn-secondary:hover {
-  background-color: #e5e7eb;
-}
-
-.btn-tertiary {
-  background-color: #eef2ff; /* Indigo 50 */
-  color: #4f46e5; /* Indigo 600 */
-}
-.btn-tertiary:hover {
-  background-color: #e0e7ff; /* Indigo 100 */
+/* =========================================
+   4. LAYOUT & CARDS
+   ========================================= */
+main.container {
+    max-width: 1200px;
+    width: 100%;
+    margin: 40px auto;
+    padding: 0 32px;
+    flex-grow: 1;
 }
 
-
-/* --- LOGGED OUT MESSAGE BOX --- */
-.message-box {
-  background-color: white;
-  border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-  padding: 48px;
-  text-align: center;
-  margin-top: 40px;
-}
-.message-box h1 {
-  font-size: 28px;
-  font-weight: 700;
-  color: #111827;
-  margin-bottom: 16px;
-}
-.message-box p {
-  font-size: 18px;
-  color: #4b5563;
-  margin-bottom: 32px;
-}
-
-/* --- DASHBOARD --- */
-.dashboard-title {
-  font-size: 32px;
-  font-weight: 700;
-  margin-bottom: 24px;
-}
-.dashboard-grid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 24px;
-}
-
-/* --- CARD (Used by Dashboard) --- */
-.card {
-  background-color: white;
-  border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-  padding: 24px;
-}
-.card-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 24px;
-}
-.card-header h2 {
-  font-size: 20px;
-  font-weight: 600;
-}
-
-/* --- CLUB LIST (Dashboard) --- */
-.club-list {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  overflow-y: auto;
-  padding-right: 8px; /* For scrollbar */
-}
-.club-card {
-  border: 1px solid #e5e7eb;
-  border-radius: 8px;
-  padding: 16px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 16px;
-}
-.club-card-info {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-}
-.club-icon {
-  width: 48px;
-  height: 48px;
-  border-radius: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 20px;
-  font-weight: 700;
-  flex-shrink: 0;
-}
-.club-name {
-  font-size: 18px;
-  font-weight: 600;
-  color: #111827;
-}
-.club-meta {
-  font-size: 14px;
-  color: #4b5563;
-  margin-top: 4px;
-}
-.tag {
-  font-size: 12px;
-  font-weight: 500;
-  padding: 2px 8px;
-  border-radius: 12px;
-  display: inline-block;
-  margin-top: 4px;
-}
-.tag-admin {
-  background-color: #d1fae5;
-  color: #065f46;
-}
-.tag-member {
-  background-color: #dbeafe;
-  color: #1e40af;
-}
-
-/* --- EVENTS SECTION (Events Page) --- */
-.events-section {
-  padding-top: 16px;
-}
-
-.events-section h1 {
-  font-size: 32px;
-  font-weight: 700;
-  margin-bottom: 24px;
-  color: #111827;
-  text-align: left;
-}
-
-/* --- EVENT LIST (Events Page & Profile) --- */
-.event-list {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 24px;
-}
-
-.event-card {
-  background-color: #fff;
-  border: 1px solid #e5e7eb;
-  border-radius: 10px;
-  padding: 24px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-  transition: box-shadow 0.2s ease, transform 0.1s ease;
-}
-
-.event-card:hover {
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-  transform: translateY(-2px);
-}
-
-.event-card h2 {
-  font-size: 20px;
-  font-weight: 600;
-  margin-bottom: 8px;
-  color: #4f46e5; /* Indigo */
-  transition: color 0.2s ease;
-}
-
-.event-card h2:hover {
-  color: #4338ca;
-}
-
-.event-card .event-date,
-.event-card .event-location {
-  font-size: 14px;
-  color: #4b5563; /* Gray */
-  margin-bottom: 4px;
-  font-weight: 500;
-}
-
-.event-card .event-description {
-  font-size: 14px;
-  color: #374151;
-  margin-top: 12px;
-  line-height: 1.6;
-}
-
-/* --- ALL CLUBS SECTION (Clubs Page) --- */
-.club-section-page {
-  padding-top: 16px;
-}
-
-.club-section-page h1 {
-  font-size: 32px;
-  font-weight: 700;
-  margin-bottom: 24px;
-  color: #111827;
-  text-align: left;
-}
-
-.club-list-page {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 24px;
-}
-
-.club-card-page {
-  background-color: #fff;
-  border: 1px solid #e5e7eb;
-  border-radius: 10px;
-  padding: 24px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-  transition: box-shadow 0.2s ease, transform 0.1s ease;
-}
-
-.club-card-page:hover {
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-  transform: translateY(-2px);
-}
-
-.club-card-page h2 {
-  font-size: 20px;
-  font-weight: 600;
-  margin-bottom: 8px;
-  color: #4f46e5; 
-  transition: color 0.2s ease;
-}
-
-.club-card-page h2:hover {
-  color: #4338ca; 
-}
-
-.club-card-page .club-description {
-  font-size: 14px;
-  color: #374151;
-  margin-bottom: 12px;
-  line-height: 1.6;
-}
-
-.club-card-page .membership-count {
-  font-size: 14px;
-  color: #4b5563; /* Gray */
-  font-weight: 500;
-}
-
-
-/* --- PROFILE PAGE --- */
-.profile-page-title {
-  font-size: 32px;
-  font-weight: 700;
-  margin-bottom: 24px;
-  color: #111827;
-}
-
-.profile-grid {
-  display: grid;
-  grid-template-columns: 1fr; /* Default to 1 column */
-  gap: 24px;
-}
-
-/* 2-column layout for larger screens */
-@media (min-width: 900px) {
-  .profile-grid {
-    grid-template-columns: 1fr 2fr; /* 1/3 for profile card, 2/3 for content */
-  }
-}
-
-.profile-details-card {
-  padding: 32px;
-  align-self: start; /* Makes card stop at its own content height */
-}
-
-.profile-header {
-  text-align: center;
-  border-bottom: 1px solid #eee;
-  padding-bottom: 24px;
-  margin-bottom: 24px;
-}
-
-.profile-pic {
-  width: 100px;
-  height: 100px;
-  border-radius: 50%;
-  background-color: #4f46e5;
-  color: white;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 48px;
-  font-weight: 700;
-  margin: 0 auto 16px auto;
-}
-
-.profile-header h2 {
-  font-size: 28px;
-  font-weight: 600;
-  margin-bottom: 4px;
-}
-
-.user-role {
-  font-size: 16px;
-  color: #6b7280;
-}
-
-.profile-info h3 {
-  font-size: 20px;
-  font-weight: 600;
-  margin-bottom: 16px;
-  border-bottom: 1px solid #eee;
-  padding-bottom: 8px;
-}
-
-.profile-info ul {
-  list-style: none;
-}
-
-.profile-info li {
-  font-size: 16px;
-  color: #374151;
-  margin-bottom: 12px;
-}
-
-.profile-info li strong {
-  color: #111827;
-  width: 70px;
-  display: inline-block;
-}
-
-.profile-actions {
-  margin-top: 32px;
-  border-top: 1px solid #eee;
-  padding-top: 24px;
-  display: flex;
-  gap: 16px;
-}
-
-/* --- CREATE EVENT PAGE --- */
-/* Added styles for the create event form */
 .page-title {
-  font-size: 32px;
-  font-weight: 700;
-  margin-bottom: 24px;
-  color: #111827;
-  text-align: center;
+    font-size: 30px;
+    font-weight: 700;
+    margin-bottom: 24px;
+    color: #111827;
 }
 
-.event-form {
-  max-width: 600px;
-  margin: 0 auto;
-  background-color: white;
-  padding: 32px;
-  border-radius: 12px;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+/* Standard Card Container */
+.card {
+    background: white;
+    border-radius: 12px;
+    border: 1px solid #e5e7eb;
+    padding: 32px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
 }
 
-.event-form textarea {
-  width: 100%;
-  padding: 10px;
-  font-size: 16px;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  min-height: 120px;
-  font-family: 'Inter', sans-serif;
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
 }
 
-.event-form textarea:focus {
-  outline: none;
-  border-color: #4f46e5;
-  box-shadow: 0 0 0 2px #e0e7ff;
+/* Message Box (Logged Out Home) */
+.message-box {
+    background: white;
+    border-radius: 12px;
+    padding: 60px;
+    text-align: center;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    max-width: 800px;
+    margin: 60px auto;
 }
 
-/* --- LOGIN MODAL --- */
-.modal-overlay {
-  position: fixed;
-  inset: 0;
-  z-index: 50;
-  background-color: rgba(0, 0, 0, 0.5);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 16px;
-  transition: opacity 0.3s ease;
-}
-.modal-content {
-  background-color: white;
-  border-radius: 8px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-  width: 100%;
-  max-width: 450px;
-  animation: modal-slide-in 0.3s ease;
-}
-.modal-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 24px;
-  border-bottom: 1px solid #eee;
-}
-.modal-header h2 {
-  font-size: 20px;
-  font-weight: 600;
-}
-.modal-close-btn {
-  font-size: 28px;
-  font-weight: 300;
-  color: #888;
-  background: none;
-  border: none;
-  cursor: pointer;
-  line-height: 1;
-}
-.modal-close-btn:hover {
-  color: #333;
-}
-.modal-body {
-  padding: 24px;
-}
-.form-group {
-  margin-bottom: 16px;
-}
-.form-group label {
-  display: block;
-  font-size: 14px;
-  font-weight: 500;
-  color: #374151;
-  margin-bottom: 4px;
-}
-.form-group input {
-  width: 100%;
-  padding: 10px;
-  font-size: 16px;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  box-shadow: inset 0 1px 2px rgba(0,0,0,0.05);
-}
-.form-group input:focus {
-  outline: none;
-  border-color: #4f46e5;
-  box-shadow: 0 0 0 2px #e0e7ff;
+/* =========================================
+   5. GRIDS & LISTS (Clubs/Events)
+   ========================================= */
+.club-list, .event-list, .club-grid, .dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 24px;
 }
 
-/* --- FORM TOGGLING --- */
-.form-toggle-text {
-  text-align: center;
-  margin-top: 20px;
-  font-size: 14px;
-  color: #4b5563;
-}
-.form-toggle-link {
-  color: #4f46e5;
-  font-weight: 600;
-  text-decoration: none;
-  cursor: pointer;
-}
-.form-toggle-link:hover {
-  text-decoration: underline;
-}
-
-
-@keyframes modal-slide-in {
-  from {
-    transform: translateY(-20px);
-    opacity: 0;
-  }
-  to {
-    transform: translateY(0);
-    opacity: 1;
-  }
-}
-
-/* --- RESPONSIVE TWEAKS --- */
-@media (max-width: 768px) {
-  .user-info {
-    display: none;
-  }
-  header {
-    padding: 16px;
-  }
-  main.container {
-    padding: 16px;
-    margin-top: 16px;
-  }
-  .club-card {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-  
-  .events-section h1, .club-section-page h1, .profile-page-title {
-    font-size: 28px;
-  }
-  
-  .event-list, .club-list-page {
-    grid-template-columns: 1fr;
-  }
-
-  .profile-card {
-    margin-top: 16px;
+/* Club & Event Cards */
+.club-card, .event-card {
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
     padding: 24px;
-  }
-  
-  .profile-grid {
-    grid-template-columns: 1fr;
-  }
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
 
+.club-card:hover, .event-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+}
 
+.club-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.club-title-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.club-name, .event-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: #111827;
+    margin: 0;
+}
+
+/* Badges */
+.badge {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    padding: 4px 8px;
+    border-radius: 4px;
+    letter-spacing: 0.5px;
+}
+
+.badge-officer { background-color: #dbeafe; color: #1e40af; }
+.badge-member { background-color: #d1fae5; color: #065f46; }
+
+/* =========================================
+   6. FORMS & INPUTS
+   ========================================= */
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    color: #374151;
+}
+
+.form-group input, 
+.form-group textarea, 
+.form-group select {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    font-size: 15px;
+    font-family: inherit;
+    transition: border-color 0.2s;
+}
+
+.form-group input:focus, 
+.form-group textarea:focus {
+    outline: none;
+    border-color: #4f46e5;
+    box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+}
+
+/* =========================================
+   7. MODALS
+   ========================================= */
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(4px);
+    z-index: 50;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+}
+
+.modal-content {
+    background: white;
+    width: 100%;
+    max-width: 440px;
+    border-radius: 12px;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.modal-header {
+    background-color: #f9fafb;
+    padding: 20px 24px;
+    border-bottom: 1px solid #e5e7eb;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.modal-header h2 {
+    font-size: 18px;
+    font-weight: 600;
+    margin: 0;
+}
+
+.modal-close-btn {
+    background: none;
+    border: none;
+    font-size: 24px;
+    color: #9ca3af;
+    cursor: pointer;
+    line-height: 1;
+}
+.modal-close-btn:hover { color: #111827; }
+
+.modal-body {
+    padding: 24px;
+}
+
+.form-toggle-text {
+    text-align: center;
+    margin-top: 24px;
+    font-size: 14px;
+    color: #6b7280;
+}
+
+.form-toggle-link {
+    color: #4f46e5;
+    font-weight: 600;
+    text-decoration: none;
+}
+.form-toggle-link:hover { text-decoration: underline; }
+
+/* =========================================
+   8. FOOTER & RESPONSIVE
+   ========================================= */
+.footer {
+    background: white;
+    border-top: 1px solid #e5e7eb;
+    padding: 32px;
+    text-align: center;
+    color: #6b7280;
+    margin-top: auto;
+    font-size: 14px;
+}
+
+@media (max-width: 768px) {
+    header { padding: 16px; }
+    .header-nav { gap: 8px; }
+    .user-info { display: none; } /* Hide name on mobile, keep avatar */
+    .club-list, .event-list, .dashboard-grid { grid-template-columns: 1fr; }
+    .btn { padding: 8px 12px; font-size: 13px; }
+}
