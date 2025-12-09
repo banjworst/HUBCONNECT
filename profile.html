@@ -63,7 +63,7 @@
         </div>
 
         <div class="profile-actions">
-          <button class="btn btn-primary">Edit Profile</button>
+          <button id="editProfileBtn" class="btn btn-primary">Edit Profile</button>
           <button class="btn btn-secondary" id="profileLogoutButton">Logout</button>
         </div>
       </aside>
@@ -131,6 +131,25 @@
   <footer class="footer">
       <p>&copy; 2025 Hub Connect. All rights reserved.</p>
   </footer>
+
+  <!-- Edit Profile Modal -->
+  <div id="editProfileModal" class="modal-overlay hidden">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 id="editModalTitle">Edit Profile</h2>
+        <button id="closeEditProfileButton" class="modal-close-btn">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form id="editProfileForm">
+          <div class="form-group"><label>Name</label><input type="text" id="editProfileName" required></div>
+          <div class="form-group"><label>Email</label><input type="email" id="editProfileEmail" required></div>
+          <div class="form-group"><label>Major</label><input type="text" id="editProfileMajor"></div>
+          <div class="form-group"><label>Year</label><input type="text" id="editProfileYear"></div>
+          <div style="display:flex; gap:8px; margin-top:12px;"><button type="submit" class="btn btn-primary">Save</button><button type="button" id="cancelEditProfileBtn" class="btn btn-secondary">Cancel</button></div>
+        </form>
+      </div>
+    </div>
+  </div>
 
   <div id="loginModal" class="modal-overlay hidden">
       <div id="loginModalContent" class="modal-content">
