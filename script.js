@@ -324,9 +324,84 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     // ==========================================
-    // 6. INITIALIZATION
+    // 6. USER CLUBS LOADING (for profile page with manage/view buttons)
+    // ==========================================
+    async function loadUserClubs() {
+        const clubList = document.querySelector('.club-list');
+        if (!clubList) return; // Not on profile page
+
+        try {
+            const res = await fetch('/api/clubs');
+            if (!res.ok) throw new Error('Failed to fetch clubs');
+
+            const clubs = await res.json();
+            clubList.innerHTML = '';
+
+            if (clubs.length === 0) {
+                clubList.innerHTML = '<p style="color: gray;">No clubs found.</p>';
+                return;
+            }
+
+            clubs.forEach(club => {
+                // Determine if user is admin (for demo, just alternate)
+                // In real app, you'd check against a roster/membership table
+                const isAdmin = Math.random() > 0.5; // Demo: random admin status
+                
+                const card = document.createElement('div');
+                card.className = 'club-card';
+                card.style.display = 'flex';
+                card.style.justifyContent = 'space-between';
+                card.style.alignItems = 'center';
+                card.style.gap = '16px';
+
+                let iconBg = '#f0fdfa';
+                let iconColor = '#14b8a6';
+                if (club.category === 'Arts') { iconBg = '#eff6ff'; iconColor = '#2563eb'; }
+                if (club.category === 'Humanities') { iconBg = '#fffbeb'; iconColor = '#d97706'; }
+                if (club.category === 'Science') { iconBg = '#fff1f2'; iconColor = '#e11d48'; }
+
+                const letter = club.icon_letter || (club.club_name ? club.club_name.charAt(0) : 'C');
+
+                card.innerHTML = `
+                    <div class="club-card-info" style="display: flex; align-items: center; gap: 12px; flex: 1;">
+                        <div class="club-icon" style="width: 48px; height: 48px; border-radius: 8px; background-color: ${iconBg}; color: ${iconColor}; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 20px; flex-shrink: 0;">
+                            ${letter}
+                        </div>
+                        <div>
+                            <h3 class="club-name" style="margin: 0; font-size: 16px; font-weight: 600;">${club.club_name}</h3>
+                            <span class="tag ${isAdmin ? 'tag-admin' : 'tag-member'}" style="display: inline-block; margin-top: 4px;">${isAdmin ? 'Admin' : 'Member'}</span>
+                        </div>
+                    </div>
+                    <button class="btn btn-secondary club-action-btn" data-club-id="${club.club_id}" data-is-admin="${isAdmin}">
+                        ${isAdmin ? 'Manage' : 'View'}
+                    </button>
+                `;
+
+                clubList.appendChild(card);
+
+                // Add click handler for manage/view button
+                const actionBtn = card.querySelector('.club-action-btn');
+                actionBtn.addEventListener('click', () => {
+                    const clubId = actionBtn.getAttribute('data-club-id');
+                    const isAdminUser = actionBtn.getAttribute('data-is-admin') === 'true';
+                    const mode = isAdminUser ? 'manage' : 'view';
+                    window.location.href = `club-detail.html?clubId=${clubId}&mode=${mode}`;
+                });
+            });
+
+        } catch (err) {
+            console.error('Failed to load user clubs:', err);
+            const clubList = document.querySelector('.club-list');
+            if (clubList) clubList.innerHTML = '<p style="color: red;">Error loading clubs.</p>';
+        }
+    }
+
+
+    // ==========================================
+    // 7. INITIALIZATION
     // ==========================================
     checkLoginStatus();
     loadEvents();
     loadClubs();
+    loadUserClubs();
 });
