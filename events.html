@@ -7,53 +7,46 @@
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 </head>
-<body>
+<body style="background-color: #f9fafb;">
 
     <header>
         <div class="header-container">
-            <a href="/" class="logo">
+            <a href="index.html" class="logo">
                 HUB CONNECT
             </a>
             
             <div class="header-right">
                 <nav id="loggedInNav" class="header-nav hidden">
-                    <a href="clubs.html">
-                        <button class="view-clubs-btn">
-                            View Other Clubs
-                        </button>
-                    </a>
-                    <a href="events.html">
-                        <button class="view-events-btn">View All Events</button>
-                    </a>
-    
+                    
+                    <a href="index.html" class="btn btn-secondary">Dashboard</a>
+                    <a href="clubs.html" class="view-clubs-btn">Clubs</a>
+                    <a href="events.html" class="view-events-btn">Events</a>
+
                     <a href="profile.html" class="user-profile">
                         <div class="user-info">
-                            <p class="user-name" id="headerUserName">John Doe</p>
-                            <p class="user-email" id="headerUserEmail">john@email.com</p>
+                            <p class="user-name" id="headerUserName">Loading...</p>
                         </div>
-                        <div class="user-avatar" id="headerUserAvatar">JD</div>
+                        <div class="user-avatar" id="headerUserAvatar">?</div>
                     </a>
+
                     <button id="logoutButton" class="btn btn-secondary">Logout</button>
                 </nav>
-
-                <button id="loginButton" class="btn btn-primary">
-                    Login
-                </button>
+                
+                <button id="loginButton" class="btn btn-primary">Login</button>
             </div>
         </div>
     </header>
+    <main class="container">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+            <h1 class="page-title" style="margin:0; text-align: left;">Upcoming Events</h1>
+            <a href="create_event.html">
+                <button class="btn btn-primary">+ Create Event</button>
+            </a>
+        </div>
 
-     <main class="container">
-        <section class="events-section">
-            <div class="events-header">
-                <h1>Upcoming Events</h1>
-                <a href="create_event.html" class="add-event-btn">+</a>
-            </div>
-            <div class="event-list">
-
-              
-            </div>
-        </section>
+        <div class="event-list">
+            <p>Loading events...</p>
+        </div>
     </main>
 
     <footer class="footer">
@@ -71,27 +64,22 @@
                 <form id="loginForm">
                     <div class="form-group">
                         <label for="login-email">Email Address</label>
-                        <input type="email" id="login-email" value="john@email.com" required>
+                        <input type="email" id="login-email" required>
                     </div>
                     <div class="form-group">
                         <label for="login-password">Password</label>
-                        <input type="password" id="login-password" value="password" required>
+                        <input type="password" id="login-password" required>
                     </div>
-                    
-                    <button type="submit" class="btn btn-primary" style="width: 100%;">
-                        Sign In
-                    </button>
-                    
+                    <button type="submit" class="btn btn-primary" style="width: 100%;">Sign In</button>
                     <p class="form-toggle-text">
-                        Don't have an account? 
-                        <a href="#" id="toggleToRegister" class="form-toggle-link">Register</a>
+                        Don't have an account? <a href="#" id="toggleToRegister" class="form-toggle-link">Register</a>
                     </p>
                 </form>
 
                 <form id="registerForm" class="hidden">
                     <div class="form-group">
                         <label for="register-name">Full Name</label>
-                        <input type="text" id="register-name" value="Jane Doe" required>
+                        <input type="text" id="register-name" required>
                     </div>
                     <div class="form-group">
                         <label for="register-email">Email Address</label>
@@ -101,18 +89,9 @@
                         <label for="register-password">Password</label>
                         <input type="password" id="register-password" required>
                     </div>
-                     <div class="form-group">
-                        <label for="confirm-password">Confirm Password</label>
-                        <input type="password" id="confirm-password" required>
-                    </div>
-                    
-                    <button type="submit" class="btn btn-primary" style="width: 100%;">
-                        Create Account
-                    </button>
-
+                    <button type="submit" class="btn btn-primary" style="width: 100%;">Create Account</button>
                     <p class="form-toggle-text">
-                        Already have an account? 
-                        <a href="#" id="toggleToLogin" class="form-toggle-link">Login</a>
+                        Already have an account? <a href="#" id="toggleToLogin" class="form-toggle-link">Login</a>
                     </p>
                 </form>
             </div>
