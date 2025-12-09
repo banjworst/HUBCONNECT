@@ -62,13 +62,20 @@
             <p id="clubDescriptionView" style="margin: 0; line-height: 1.6;"></p>
           </div>
           
-          <div style="background: #f9fafb; padding: 16px; border-radius: 8px;">
+          <div style="background: #f9fafb; padding: 16px; border-radius: 8px; margin-bottom: 20px;">
             <h3 style="margin-top: 0; font-size: 16px;">Club Information</h3>
             <ul style="margin: 0; padding-left: 20px; line-height: 1.8;">
               <li><strong>Category:</strong> <span id="clubCategoryView"></span></li>
               <li><strong>Members:</strong> <span id="clubMembersView">-</span></li>
               <li><strong>Founded:</strong> <span id="clubFoundedView">-</span></li>
             </ul>
+          </div>
+
+          <div style="background: #f9fafb; padding: 16px; border-radius: 8px;">
+            <h3 style="margin-top: 0; font-size: 16px;">Upcoming Events</h3>
+            <div id="upcomingEventsList" style="margin: 0;">
+              <p style="color: gray;">Loading events...</p>
+            </div>
           </div>
         </div>
 
@@ -218,6 +225,49 @@
         document.getElementById('clubCategoryView').textContent = club.category || 'General';
         document.getElementById('clubMembersView').textContent = club.member_count || '-';
         document.getElementById('clubFoundedView').textContent = club.created_at ? new Date(club.created_at).toLocaleDateString() : '-';
+
+        // Load and display upcoming events for this club
+        loadClubEvents(club.club_id);
+      }
+    }
+
+    async function loadClubEvents(clubId) {
+      try {
+        const res = await fetch('/api/events');
+        if (!res.ok) throw new Error('Failed to fetch events');
+
+        const allEvents = await res.json();
+        const clubEvents = allEvents.filter(event => event.club_id == clubId);
+
+        const eventsList = document.getElementById('upcomingEventsList');
+        eventsList.innerHTML = '';
+
+        if (clubEvents.length === 0) {
+          eventsList.innerHTML = '<p style="color: gray;">No upcoming events for this club.</p>';
+          return;
+        }
+
+        clubEvents.forEach(event => {
+          const eventDate = new Date(event.event_date);
+          const dateStr = eventDate.toLocaleDateString();
+          const timeStr = event.event_time || 'TBD';
+          const location = event.location || 'TBD';
+          const title = event.event_title || 'Untitled Event';
+          const description = event.description || 'No description provided.';
+
+          const eventCard = document.createElement('div');
+          eventCard.style.cssText = 'background: white; border: 1px solid #e5e7eb; border-radius: 8px; padding: 12px; margin-bottom: 12px;';
+          eventCard.innerHTML = `
+            <h4 style="margin: 0 0 8px 0; font-size: 15px; font-weight: 600;">${title}</h4>
+            <p style="margin: 0 0 4px 0; font-size: 13px; color: #666;"><strong>Date:</strong> ${dateStr} at ${timeStr}</p>
+            <p style="margin: 0 0 4px 0; font-size: 13px; color: #666;"><strong>Location:</strong> ${location}</p>
+            <p style="margin: 0; font-size: 13px; color: #555; line-height: 1.4;">${description}</p>
+          `;
+          eventsList.appendChild(eventCard);
+        });
+      } catch (error) {
+        console.error('Error loading events:', error);
+        document.getElementById('upcomingEventsList').innerHTML = '<p style="color: red;">Error loading events.</p>';
       }
     }
   </script>
