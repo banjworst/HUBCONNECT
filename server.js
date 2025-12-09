@@ -30,6 +30,26 @@ const server = http.createServer(async (req, res) => {
       return;
     }
 
+    // GET /api/clubs/:id
+    if (pathname.startsWith('/api/clubs/') && req.method === 'GET' && pathname.split('/').length === 4) {
+      const clubId = pathname.split('/')[3];
+      try {
+        const [clubs] = await db.query('SELECT * FROM clubs WHERE club_id = ?', [clubId]);
+        if (clubs.length === 0) {
+          res.writeHead(404, { 'Content-Type': 'application/json' });
+          res.end(JSON.stringify({ error: 'Club not found' }));
+        } else {
+          res.writeHead(200, { 'Content-Type': 'application/json' });
+          res.end(JSON.stringify(clubs[0]));
+        }
+      } catch (error) {
+        console.error(error);
+        res.writeHead(500, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ error: 'Database query failed' }));
+      }
+      return;
+    }
+
     // POST /api/clubs
     if (pathname === '/api/clubs' && req.method === 'POST') {
       let body = '';
@@ -58,8 +78,8 @@ const server = http.createServer(async (req, res) => {
       req.on('end', async () => {
         try {
           const clubData = JSON.parse(body);
-          const query = 'UPDATE clubs SET club_name = ?, description = ? WHERE club_id = ?';
-          await db.query(query, [clubData.club_name, clubData.description, clubId]);
+          const query = 'UPDATE clubs SET club_name = ?, description = ?, category = ? WHERE club_id = ?';
+          await db.query(query, [clubData.club_name, clubData.description, clubData.category, clubId]);
 
           res.writeHead(200, { 'Content-Type': 'application/json' });
           res.end(JSON.stringify({ message: 'Club updated' }));
