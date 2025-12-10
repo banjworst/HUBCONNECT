@@ -2,46 +2,37 @@
 // Controller: Add member to a club for HubConnect
 // Author: Jayden
 
-module.exports = function makeAddMemberController(connection) {
+module.exports = function makeAddMemberController(db) {
   return function addMember(req, res) {
-    const { name, email, club_id } = req.body;
+    let body = '';
 
-    if (!name || !email || !club_id) {
-      return res.status(400).json({ error: "name, email, and club_id are required" });
-    }
+    req.on('data', chunk => {
+      body += chunk;
+    });
 
-    // 1) Insert into User table
-    const insertUserSql = `
-      INSERT INTO User (name, email)
-      VALUES (?, ?);
-    `;
+    req.on('end', async () => {
+      try {
+        const { club_id, member_name } = JSON.parse(body);
 
-    connection.query(insertUserSql, [name, email], (err, result) => {
-      if (err) {
-        console.error("User insert error:", err);
-        return res.status(500).json({ error: "Failed to create user" });
-      }
-
-      const newUserId = result.insertId;
-
-      // 2) Insert into Membership table
-      const insertMembershipSql = `
-        INSERT INTO Membership (user_id, club_id, join_date, status)
-        VALUES (?, ?, NOW(), 'active');
-      `;
-
-      connection.query(insertMembershipSql, [newUserId, club_id], (err2) => {
-        if (err2) {
-          console.error("Membership insert error:", err2);
-          return res.status(500).json({ error: "Failed to add membership" });
+        if (!club_id || !member_name) {
+          res.writeHead(400, { 'Content-Type': 'application/json' });
+          res.end(JSON.stringify({ error: 'club_id and member_name are required' }));
+          return;
         }
 
-        res.json({
-          message: "Member successfully added to club",
-          user_id: newUserId,
-          club_id,
-        });
-      });
+        // Match the existing roster table your project already uses
+        await db.query(
+          'INSERT INTO roster (club_id, member_name, role, mem_status) VALUES (?,?,?,?)',
+          [club_id, member_name, 'Member', 'pending']
+        );
+
+        res.writeHead(201, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ message: 'Member successfully added to club' }));
+      } catch (err) {
+        console.error('AddMember error:', err);
+        res.writeHead(500, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ error: 'Failed to add member' }));
+      }
     });
   };
 };

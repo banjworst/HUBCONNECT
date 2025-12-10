@@ -3,6 +3,12 @@ const fs = require('fs');
 const path = require('path');
 const db = require('./config/db');
 const crypto = require('crypto');
+const makeAddMemberController = require('./Backend/addMemberController');
+const makeViewEventsController = require('./Backend/viewEventsController');
+
+// Create controller handler functions by injecting DB connection
+const addMemberController = makeAddMemberController(db);
+const viewEventsController = makeViewEventsController(db);
 
 const PORT = 80;
 
@@ -176,23 +182,11 @@ const server = http.createServer(async (req, res) => {
     // ==========================================
     // 2. EVENTS API
     // ==========================================
-    if (pathname === '/api/events' && req.method === 'GET') {
-      try { const [rows] = await db.query('SELECT * FROM events'); res.writeHead(200); res.end(JSON.stringify(rows)); }
-      catch (e) { res.writeHead(500); res.end(JSON.stringify({ error: e.message })); }
-      return;
-    }
-    if (pathname === '/api/events' && req.method === 'POST') {
-      let body = ''; req.on('data', c => body += c);
-      req.on('end', async () => {
-        try {
-            const d = JSON.parse(body);
-            const [r] = await db.query('INSERT INTO events (club_id, event_title, description, event_date, event_time, location, created_by) VALUES (?,?,?,?,?,?,?)', 
-                [d.club_id, d.event_title, d.description, d.event_date, d.event_time, d.location, d.created_by]);
-            res.writeHead(201); res.end(JSON.stringify({ id: r.insertId }));
-        } catch (e) { res.writeHead(500); res.end(JSON.stringify({ error: e.message })); }
-      });
-      return;
-    }
+if (pathname === '/api/events' && req.method === 'GET') {
+  // Use viewEvents controller
+  return viewEventsController(req, res);
+ }
+
     if (pathname.startsWith('/api/events/') && req.method === 'DELETE') {
         const id = pathname.split('/')[3];
         try { await db.query('DELETE FROM events WHERE event_id=?', [id]); res.writeHead(200); res.end(JSON.stringify({ message: 'Deleted' })); }
@@ -213,16 +207,10 @@ const server = http.createServer(async (req, res) => {
       return;
     }
     if (pathname === '/api/rosters' && req.method === 'POST') {
-      let body = ''; req.on('data', c => body += c);
-      req.on('end', async () => {
-        try {
-          const { club_id, member_name } = JSON.parse(body);
-          await db.query('INSERT INTO roster (club_id, member_name, role, mem_status) VALUES (?,?,?,?)', [club_id, member_name, 'Member', 'pending']);
-          res.writeHead(201); res.end(JSON.stringify({ message: 'Joined' }));
-        } catch (e) { res.writeHead(500); res.end(JSON.stringify({ error: e.message })); }
-      });
-      return;
-    }
+  // Use your addMember controller
+  return addMemberController(req, res);
+}
+
     if (pathname.startsWith('/api/rosters/') && req.method === 'PUT') {
         const id = pathname.split('/')[3];
         let body = ''; req.on('data', c => body += c);

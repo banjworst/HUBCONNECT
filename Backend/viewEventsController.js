@@ -2,22 +2,20 @@
 // Controller: View events for HubConnect
 // Author: Jayden
 
-module.exports = function makeViewEventsController(connection) {
-  return function viewEvents(req, res) {
-    const sql = `
-      SELECT event_id, title, date_time, description
-      FROM Event
-      ORDER BY date_time ASC;
-    `;
+module.exports = function makeViewEventsController(db) {
+  return async function viewEvents(req, res) {
+    try {
+      // Match the existing events table the project is using
+      const [rows] = await db.query(
+        'SELECT * FROM events ORDER BY event_date ASC, event_time ASC'
+      );
 
-    connection.query(sql, (err, results) => {
-      if (err) {
-        console.error("ViewEvents error:", err);
-        return res.status(500).json({ error: "Database error" });
-      }
-
-      // If no events, still return a valid JSON array
-      res.json(results);
-    });
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify(rows));
+    } catch (err) {
+      console.error('ViewEvents error:', err);
+      res.writeHead(500, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ error: 'Database error' }));
+    }
   };
 };
